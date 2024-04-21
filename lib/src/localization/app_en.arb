@@ -1,0 +1,6 @@
+{
+  "appTitle": "fyp_application",
+  "@appTitle": {
+    "description": "The title of the application"
+  }
+}
