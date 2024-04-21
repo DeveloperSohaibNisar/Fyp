@@ -1,10 +1,10 @@
-import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp_application/screeens/home/tabpages/recordings/recodrding_list.dart';
 import 'package:fyp_application/screeens/home/tabpages/recordings/recording_filter.dart';
+import 'package:fyp_application/screeens/record/record_view.dart';
 
 class RecordingView extends StatelessWidget {
   const RecordingView({super.key});
@@ -38,7 +38,10 @@ class RecordingView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton.filledTonal(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.restorablePushNamed(
+                            context, RecordView.routeName);
+                      },
                       iconSize: 45,
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
@@ -58,14 +61,12 @@ class RecordingView extends StatelessWidget {
                     const SizedBox(width: 40),
                     IconButton.filledTonal(
                       onPressed: () async {
-                        FilePickerResult? result = await FilePicker.platform
-                            .pickFiles(allowMultiple: true);
+                        var picked = await FilePicker.platform.pickFiles();
 
-                        if (result != null) {
-                          List<File> files =
-                              result.paths.map((path) => File(path!)).toList();
-                        } else {
-                          // User canceled the picker
+                        if (picked != null) {
+                          if (kDebugMode) {
+                            print(picked.files.first.name);
+                          }
                         }
                       },
                       iconSize: 45,
