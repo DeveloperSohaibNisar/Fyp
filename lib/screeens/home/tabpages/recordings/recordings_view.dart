@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp_application/screeens/home/tabpages/recordings/recodrding_list.dart';
 import 'package:fyp_application/screeens/home/tabpages/recordings/recording_filter.dart';
 import 'package:fyp_application/screeens/record/record_view.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class RecordingView extends StatelessWidget {
   const RecordingView({super.key});
@@ -38,9 +39,34 @@ class RecordingView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton.filledTonal(
-                      onPressed: () {
-                        Navigator.restorablePushNamed(
-                            context, RecordView.routeName);
+                      onPressed: () async {
+                        var status = await Permission.microphone.request();
+                        if (!context.mounted) return;
+                        switch (status) {
+                          case PermissionStatus.permanentlyDenied:
+                            var snackBar = SnackBar(
+                              content:
+                                  const Text('microphone permission required!'),
+                              action: SnackBarAction(
+                                label: 'Open Settings',
+                                onPressed: () => openAppSettings(),
+                              ),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            break;
+                          case PermissionStatus.denied:
+                            const snackBar = SnackBar(
+                                content:
+                                    Text('microphone permission not granted'));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            break;
+                          case PermissionStatus.granted:
+                            Navigator.restorablePushNamed(
+                                context, RecordView.routeName);
+                          default:
+                        }
                       },
                       iconSize: 45,
                       style: ButtonStyle(
@@ -62,7 +88,6 @@ class RecordingView extends StatelessWidget {
                     IconButton.filledTonal(
                       onPressed: () async {
                         var picked = await FilePicker.platform.pickFiles();
-
                         if (picked != null) {
                           if (kDebugMode) {
                             print(picked.files.first.name);

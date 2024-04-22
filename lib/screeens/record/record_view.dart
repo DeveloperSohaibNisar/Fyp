@@ -1,11 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
-class RecordView extends StatelessWidget {
+class RecordView extends StatefulWidget {
   const RecordView({super.key});
   static const routeName = '/record_audio';
+
+  @override
+  State<RecordView> createState() => _RecordViewState();
+}
+
+class _RecordViewState extends State<RecordView> {
+  final recorder = FlutterSoundRecorder();
+  bool isRecorderReady = false;
+
+  Future record() async {
+    await recorder.startRecorder();
+  }
+
+  Future stop() async {
+    await recorder.stopRecorder();
+  }
+
+  Future pause() async {
+    await recorder.pauseRecorder();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initRecorder();
+  }
+
+  @override
+  void dispose() {
+    recorder.closeRecorder();
+    super.dispose();
+  }
+
+  Future initRecorder() async {
+    await recorder.openRecorder();
+    setState(() {
+      isRecorderReady = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     const Duration length = Duration(seconds: 5, minutes: 15);
