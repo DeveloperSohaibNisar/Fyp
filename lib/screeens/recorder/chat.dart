@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_application/screeens/record/chatpage.dart';
+import 'package:fyp_application/screeens/recorder/chatpage.dart';
 
 
 class Chat1 extends StatelessWidget{
