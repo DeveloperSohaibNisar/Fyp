@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp_application/screeens/home/tabpages/recordings/recodrding_list.dart';
 import 'package:fyp_application/screeens/home/tabpages/recordings/recording_filter.dart';
-import 'package:fyp_application/screeens/record/record_view.dart';
+import 'package:fyp_application/screeens/recorder/recorder_view.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RecordingView extends StatelessWidget {
@@ -64,7 +64,7 @@ class RecordingView extends StatelessWidget {
                             break;
                           case PermissionStatus.granted:
                             Navigator.restorablePushNamed(
-                                context, RecordView.routeName);
+                                context, RecorderView.routeName);
                           default:
                         }
                       },

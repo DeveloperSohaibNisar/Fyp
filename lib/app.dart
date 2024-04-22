@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fyp_application/screeens/home/home_page.dart';
-import 'package:fyp_application/screeens/record/record_view.dart';
+import 'package:fyp_application/screeens/recorder/recorder_view.dart';
 import 'package:fyp_application/state/app_state.dart';
 import 'package:provider/provider.dart';
 
@@ -74,8 +74,8 @@ class MyApp extends StatelessWidget {
                   switch (routeSettings.name) {
                     case SettingsView.routeName:
                       return SettingsView(controller: settingsController);
-                    case RecordView.routeName:
-                      return const RecordView();
+                    case RecorderView.routeName:
+                      return const RecorderView();
                     case HomePage.routeName:
                     default:
                       return const HomePage();

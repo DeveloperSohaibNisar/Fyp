@@ -4,15 +4,15 @@ import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
-class RecordView extends StatefulWidget {
-  const RecordView({super.key});
+class RecorderView extends StatefulWidget {
+  const RecorderView({super.key});
   static const routeName = '/record_audio';
 
   @override
-  State<RecordView> createState() => _RecordViewState();
+  State<RecorderView> createState() => _RecorderViewState();
 }
 
-class _RecordViewState extends State<RecordView> {
+class _RecorderViewState extends State<RecorderView> {
   final recorder = FlutterSoundRecorder();
   bool isRecorderReady = false;
 
