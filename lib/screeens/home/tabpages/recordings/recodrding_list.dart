@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp_application/screeens/record/chat.dart';
 import 'package:fyp_application/state/app_state.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -57,7 +58,9 @@ class RecordingList extends StatelessWidget {
                 const Icon(Icons.more_vert),
               ],
             ),
-            onTap: () {},
+            onTap: () {
+              Chat1();
+            },
           );
         },
         separatorBuilder: ((context, index) => const Divider()),
