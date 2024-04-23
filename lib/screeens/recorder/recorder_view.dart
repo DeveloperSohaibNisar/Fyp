@@ -23,7 +23,7 @@ class _RecorderViewState extends State<RecorderView> {
   Future toogleRecord() async {
     if (!isRecorderReady) return;
     if (recorder!.isStopped) {
-      await recorder!.startRecorder(toFile: 'temp_recording');
+      await record();
     } else if (recorder!.isPaused) {
       await resume();
     } else {
@@ -32,8 +32,17 @@ class _RecorderViewState extends State<RecorderView> {
   }
 
   void startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 1),
-        (_) => length = Duration(seconds: length.inSeconds + 1));
+    timer = Timer.periodic(
+        const Duration(seconds: 1),
+        (_) => setState(() {
+              length = Duration(seconds: length.inSeconds + 1);
+            }));
+  }
+
+  Future record() async {
+    if (!isRecorderReady) return;
+    await recorder!.startRecorder(toFile: 'temp_recording');
+    startTimer();
   }
 
   Future stop() async {
@@ -86,7 +95,6 @@ class _RecorderViewState extends State<RecorderView> {
 
   @override
   Widget build(BuildContext context) {
-    // const Duration length = Duration(seconds: 5, minutes: 15);
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle:
@@ -130,30 +138,46 @@ class _RecorderViewState extends State<RecorderView> {
           children: [
             SvgPicture.asset('assets/images/wave.svg'),
             const SizedBox(height: 32),
-            StreamBuilder<RecordingDisposition>(
-                stream: recorder!.onProgress,
-                builder: (context, snapshot) {
-                  final length = snapshot.hasData
-                      ? snapshot.data!.duration
-                      : Duration.zero;
-                  return GradientText(
-                    [length.inHours, length.inMinutes, length.inSeconds]
-                        .map((seg) =>
-                            seg.remainder(60).toString().padLeft(2, '0'))
-                        .join(':'),
-                    style: const TextStyle(
-                      fontSize: 42,
-                    ),
-                    gradientType: GradientType.linear,
-                    gradientDirection: GradientDirection.ltr,
-                    radius: .4,
-                    colors: const [
-                      Color.fromRGBO(252, 138, 25, 1),
-                      Color.fromRGBO(253, 119, 19, 1),
-                      Color.fromRGBO(254, 96, 12, 1),
-                    ],
-                  );
-                }),
+            // StreamBuilder<RecordingDisposition>(
+            //     stream: recorder!.onProgress,
+            //     builder: (context, snapshot) {
+            //       final length = snapshot.hasData
+            //           ? snapshot.data!.duration
+            //           : Duration.zero;
+            //       return GradientText(
+            //         [length.inHours, length.inMinutes, length.inSeconds]
+            //             .map((seg) =>
+            //                 seg.remainder(60).toString().padLeft(2, '0'))
+            //             .join(':'),
+            //         style: const TextStyle(
+            //           fontSize: 42,
+            //         ),
+            //         gradientType: GradientType.linear,
+            //         gradientDirection: GradientDirection.ltr,
+            //         radius: .4,
+            //         colors: const [
+            //           Color.fromRGBO(252, 138, 25, 1),
+            //           Color.fromRGBO(253, 119, 19, 1),
+            //           Color.fromRGBO(254, 96, 12, 1),
+            //         ],
+            //       );
+            //     }),
+            GradientText(
+              [length.inHours, length.inMinutes, length.inSeconds]
+                  .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+                  .join(':'),
+              style: const TextStyle(
+                fontSize: 42,
+              ),
+              gradientType: GradientType.linear,
+              gradientDirection: GradientDirection.ltr,
+              radius: .4,
+              colors: const [
+                Color.fromRGBO(252, 138, 25, 1),
+                Color.fromRGBO(253, 119, 19, 1),
+                Color.fromRGBO(254, 96, 12, 1),
+              ],
+            ),
             const Text(
               style: TextStyle(
                 fontSize: 24,
