@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:fyp_application/screeens/home/home_page.dart';
+import 'package:fyp_application/screeens/home/home_view.dart';
+import 'package:fyp_application/screeens/recording_summary/recording_summary_tabs_view.dart';
 import 'package:fyp_application/screeens/recorder/recorder_view.dart';
 import 'package:fyp_application/state/app_state.dart';
 import 'package:provider/provider.dart';
@@ -76,9 +77,11 @@ class MyApp extends StatelessWidget {
                       return SettingsView(controller: settingsController);
                     case RecorderView.routeName:
                       return const RecorderView();
-                    case HomePage.routeName:
+                    case RecordTabView.routeName:
+                      return const RecordTabView();
+                    case HomeView.routeName:
                     default:
-                      return const HomePage();
+                      return const HomeView();
                   }
                 },
               );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_application/screeens/recorder/chat.dart';
+import 'package:fyp_application/screeens/recording_summary/recording_summary_tabs_view.dart';
 import 'package:fyp_application/state/app_state.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -55,11 +55,11 @@ class RecordingList extends StatelessWidget {
                 ]
                     .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
                     .join(':')),
-                const Icon(Icons.more_vert),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
               ],
             ),
             onTap: () {
-              RecordTabView();
+              Navigator.restorablePushNamed(context, RecordTabView.routeName);
             },
           );
         },

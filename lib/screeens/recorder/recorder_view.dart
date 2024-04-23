@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
@@ -13,19 +15,52 @@ class RecorderView extends StatefulWidget {
 }
 
 class _RecorderViewState extends State<RecorderView> {
-  final recorder = FlutterSoundRecorder();
+  FlutterSoundRecorder? recorder;
   bool isRecorderReady = false;
+  Timer? timer;
+  Duration length = Duration.zero;
 
-  Future record() async {
-    await recorder.startRecorder();
+  Future toogleRecord() async {
+    if (!isRecorderReady) return;
+    if (recorder!.isStopped) {
+      await recorder!.startRecorder(toFile: 'temp_recording');
+    } else if (recorder!.isPaused) {
+      await resume();
+    } else {
+      await pause();
+    }
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1),
+        (_) => length = Duration(seconds: length.inSeconds + 1));
   }
 
   Future stop() async {
-    await recorder.stopRecorder();
+    if (!isRecorderReady) return;
+    await recorder!.stopRecorder();
+    timer?.cancel();
   }
 
   Future pause() async {
-    await recorder.pauseRecorder();
+    if (!isRecorderReady) return;
+    await recorder!.pauseRecorder();
+    timer?.cancel();
+  }
+
+  Future cancel() async {
+    if (!isRecorderReady) return;
+    await recorder!.closeRecorder();
+    isRecorderReady = false;
+    timer?.cancel();
+    length = Duration.zero;
+    initRecorder();
+  }
+
+  Future resume() async {
+    if (!isRecorderReady) return;
+    await recorder!.resumeRecorder();
+    startTimer();
   }
 
   @override
@@ -36,20 +71,22 @@ class _RecorderViewState extends State<RecorderView> {
 
   @override
   void dispose() {
-    recorder.closeRecorder();
+    recorder!.closeRecorder();
+    recorder = null;
+    isRecorderReady = false;
     super.dispose();
   }
 
   Future initRecorder() async {
-    await recorder.openRecorder();
-    setState(() {
-      isRecorderReady = true;
-    });
+    recorder = FlutterSoundRecorder();
+    await recorder!.openRecorder();
+    recorder!.setSubscriptionDuration(const Duration(milliseconds: 1000));
+    isRecorderReady = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    const Duration length = Duration(seconds: 5, minutes: 15);
+    // const Duration length = Duration(seconds: 5, minutes: 15);
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle:
@@ -93,22 +130,30 @@ class _RecorderViewState extends State<RecorderView> {
           children: [
             SvgPicture.asset('assets/images/wave.svg'),
             const SizedBox(height: 32),
-            GradientText(
-              [length.inHours, length.inMinutes, length.inSeconds]
-                  .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
-                  .join(':'),
-              style: const TextStyle(
-                fontSize: 42,
-              ),
-              gradientType: GradientType.linear,
-              gradientDirection: GradientDirection.ltr,
-              radius: .4,
-              colors: const [
-                Color.fromRGBO(252, 138, 25, 1),
-                Color.fromRGBO(253, 119, 19, 1),
-                Color.fromRGBO(254, 96, 12, 1),
-              ],
-            ),
+            StreamBuilder<RecordingDisposition>(
+                stream: recorder!.onProgress,
+                builder: (context, snapshot) {
+                  final length = snapshot.hasData
+                      ? snapshot.data!.duration
+                      : Duration.zero;
+                  return GradientText(
+                    [length.inHours, length.inMinutes, length.inSeconds]
+                        .map((seg) =>
+                            seg.remainder(60).toString().padLeft(2, '0'))
+                        .join(':'),
+                    style: const TextStyle(
+                      fontSize: 42,
+                    ),
+                    gradientType: GradientType.linear,
+                    gradientDirection: GradientDirection.ltr,
+                    radius: .4,
+                    colors: const [
+                      Color.fromRGBO(252, 138, 25, 1),
+                      Color.fromRGBO(253, 119, 19, 1),
+                      Color.fromRGBO(254, 96, 12, 1),
+                    ],
+                  );
+                }),
             const Text(
               style: TextStyle(
                 fontSize: 24,
@@ -125,7 +170,10 @@ class _RecorderViewState extends State<RecorderView> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50)),
                   child: IconButton.filledTonal(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await cancel();
+                      setState(() {});
+                    },
                     iconSize: 32,
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
@@ -162,13 +210,16 @@ class _RecorderViewState extends State<RecorderView> {
                       ),
                     ),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await toogleRecord();
+                        setState(() {});
+                      },
                       iconSize: 48,
                       padding: const EdgeInsets.all(16),
                       color: Colors.white,
-                      icon: const Icon(
-                        Icons.pause,
-                        shadows: <Shadow>[
+                      icon: Icon(
+                        recorder!.isRecording ? Icons.pause : Icons.play_arrow,
+                        shadows: const <Shadow>[
                           Shadow(
                               color: Color.fromRGBO(0, 0, 0, .25),
                               blurRadius: 4,
@@ -184,7 +235,10 @@ class _RecorderViewState extends State<RecorderView> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50)),
                   child: IconButton.filledTonal(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await stop();
+                      setState(() {});
+                    },
                     iconSize: 32,
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(

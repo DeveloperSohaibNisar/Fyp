@@ -5,8 +5,8 @@ import 'package:fyp_application/screeens/home/tabpages/recordings/recordings_vie
 import 'package:fyp_application/screeens/settings/settings_view.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomeView extends StatelessWidget {
+  const HomeView({super.key});
   static const routeName = '/';
 
   @override
