@@ -59,7 +59,7 @@ class RecordingList extends StatelessWidget {
               ],
             ),
             onTap: () {
-              Chat1();
+              RecordTabView();
             },
           );
         },

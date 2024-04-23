@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../utilities/const_mes.dart';
+
 class ChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -40,260 +42,26 @@ class ChatPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage("https://via.placeholder.com/24x24"),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: ShapeDecoration(
-                        color: Color(0xFFF6F9FC),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'How can i help you?',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 13,
-                              fontFamily: 'Inria Sans',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                child: BotChat(senderMessage: "How can I help you?"),
               ),
               const SizedBox(height: 16),
               Container(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: ShapeDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage("https://via.placeholder.com/24x24"),
-                          fit: BoxFit.fill,
-                        ),
-                        shape: OvalBorder(),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: ShapeDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment(1.00, 0.00),
-                          end: Alignment(-1, 0),
-                          colors: [Color(0xFFFC8A19), Color(0xFFFD7713), Color(0xFFFE600C)],
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'What was the name of the father of alexender?',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontFamily: 'Inria Sans',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                child: UserChat(senderMessage: "What was the name of the father of alexender?",),
               ),
               const SizedBox(height: 16),
               Container(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage("https://via.placeholder.com/24x24"),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: ShapeDecoration(
-                        color: Color(0xFFF6F9FC),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 280,
-                            child: Text(
-                              'The name of Alexander the Great\'s father was Philip II of Macedon. He was a powerful king who unified Greece and laid the groundwork for Alexander\'s future conquests.',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 13,
-                                fontFamily: 'Inria Sans',
-                                fontWeight: FontWeight.w400,
-                                height: 0,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                child: BotChat(senderMessage: "The name of Alexander the Great's father was Philip II of Macedon."
+                    " He was a powerful king who unified Greece and laid the groundwork for Alexander's future conquests."),
               ),
               const SizedBox(height: 16),
               Container(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: ShapeDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage("https://via.placeholder.com/24x24"),
-                          fit: BoxFit.fill,
-                        ),
-                        shape: OvalBorder(),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: ShapeDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment(1.00, 0.00),
-                          end: Alignment(-1, 0),
-                          colors: [Color(0xFFFC8A19), Color(0xFFFD7713), Color(0xFFFE600C)],
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 280,
-                            child: Text(
-                              'How successful was Alexander\'s policy of cultural fusion in unifying his diverse empire?',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontFamily: 'Inria Sans',
-                                fontWeight: FontWeight.w400,
-                                height: 0,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                child: UserChat(senderMessage: "How successful was Alexander's policy of cultural fusion in unifying his diverse empire?",),
               ),
               const SizedBox(height: 16),
               Container(
                 //height: 171,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage("https://via.placeholder.com/24x24"),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: ShapeDecoration(
-                        color: Color(0xFFF6F9FC),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 280,
-                            child: Text(
-                              'The success of Alexander the Great\'s policy of cultural fusion in unifying his vast and diverse empire is a complex and debated topic among historians. There is no easy answer, as the policy had both positive and negative consequences ...',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 13,
-                                fontFamily: 'Inria Sans',
-                                fontWeight: FontWeight.w400,
-                                height: 0,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                child: BotChat(senderMessage: "The success of Alexander the Great's policy of cultural fusion in unifying his vast and diverse empire is a complex"
+                    " and debated topic among historians. There is no easy answer, as the policy had both positive and negative consequences ..."),
               ),
             ],
           ),

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fyp_application/screeens/recorder/chatpage.dart';
 
 
-class Chat1 extends StatelessWidget{
-  const Chat1({super.key});
-  static const routeName = '/Chat1';
+class RecordTabView extends StatelessWidget{
+  const RecordTabView({super.key});
+  static const routeName = '/RecordTabView';
 
 
   @override
