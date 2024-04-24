@@ -6,10 +6,28 @@ import 'package:fyp_application/screeens/home/tabpages/recordings/recodrding_lis
 import 'package:fyp_application/screeens/home/tabpages/recordings/recording_filter.dart';
 import 'package:fyp_application/screeens/recorder/recorder_view.dart';
 import 'package:permission_handler/permission_handler.dart';
+// import 'package:wave/config.dart';
+// import 'package:wave/wave.dart';
 
 class RecordingView extends StatelessWidget {
   const RecordingView({super.key});
 
+  static const _backgroundColor = Color(0xFFF15BB5);
+
+  static const _colors = [
+    Color(0xFFFEE440),
+    Color(0xFF00BBF9),
+  ];
+
+  static const _durations = [
+    5000,
+    4000,
+  ];
+
+  static const _heightPercentages = [
+    0.65,
+    0.66,
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +41,17 @@ class RecordingView extends StatelessWidget {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset('assets/images/vector1.svg'),
+              // SvgPicture.asset('assets/images/vector1.svg'),
+              // WaveWidget(
+              //   config: CustomConfig(
+              //     colors: _colors,
+              //     durations: _durations,
+              //     heightPercentages: _heightPercentages,
+              //   ),
+              //   backgroundColor: _backgroundColor,
+              //   size: Size(double.infinity, double.infinity),
+              //   waveAmplitude: 0,
+              // ),
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: const BoxDecoration(
@@ -64,7 +92,7 @@ class RecordingView extends StatelessWidget {
                             break;
                           case PermissionStatus.granted:
                             Navigator.restorablePushNamed(
-                                context, RecorderView.routeName);
+                                context, RecorderView2.routeName);
                           default:
                         }
                       },

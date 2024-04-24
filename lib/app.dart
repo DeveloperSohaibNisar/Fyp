@@ -75,8 +75,10 @@ class MyApp extends StatelessWidget {
                   switch (routeSettings.name) {
                     case SettingsView.routeName:
                       return SettingsView(controller: settingsController);
-                    case RecorderView.routeName:
-                      return const RecorderView();
+                    // case RecorderView.routeName:
+                    //   return const RecorderView();
+                    case RecorderView2.routeName:
+                      return const RecorderView2();
                     case RecordTabView.routeName:
                       return const RecordTabView();
                     case HomeView.routeName:
