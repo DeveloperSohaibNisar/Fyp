@@ -19,7 +19,7 @@ class RecordTabView extends StatelessWidget {
                 child: Container(
                   //width: 361,
                   height: 52,
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(3),
                   clipBehavior: Clip.antiAlias,
                   decoration: ShapeDecoration(
                     color: Colors.white,
