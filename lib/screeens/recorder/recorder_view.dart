@@ -278,6 +278,7 @@ class RecorderView2 extends StatefulWidget {
 
 class _RecorderView2State extends State<RecorderView2> {
   RecorderController controller = RecorderController();
+
   Timer? timer;
   Duration length = Duration.zero;
 
@@ -289,6 +290,21 @@ class _RecorderView2State extends State<RecorderView2> {
         (_) => setState(() {
               length = Duration(seconds: length.inSeconds + 1);
             }));
+  }
+
+  @override
+  void initState() {
+    controller.updateFrequency =
+        const Duration(milliseconds: 50); // Update speed of new wave
+    // controller.androidEncoder = AndroidEncoder.aac; // Changing android encoder
+    // controller.androidOutputFormat =
+    //     AndroidOutputFormat.mpeg4; // Changing android output format
+    // controller.iosEncoder =
+    //     IosEncoder.kAudioFormatMPEG4AAC; // Changing ios encoder
+    // controller.sampleRate = 44100; // Updating sample rate
+    // controller.bitRate = 48000; // Updating bitrate
+
+    super.initState();
   }
 
   @override
@@ -343,20 +359,23 @@ class _RecorderView2State extends State<RecorderView2> {
           children: [
             // SvgPicture.asset('assets/images/wave.svg'),
             AudioWaveforms(
-              enableGesture: true,
-              size: Size(MediaQuery.of(context).size.width / 2, 50),
+              size: Size(MediaQuery.of(context).size.width - 24, 150),
               recorderController: controller,
-              waveStyle: const WaveStyle(
-                waveColor: Colors.white,
+              enableGesture: false,
+              waveStyle: WaveStyle(
+                waveColor: Colors.blue,
+                showDurationLabel: true,
+                scaleFactor: 800000,
+                spacing: 8.0,
+                showBottom: false,
                 extendWaveform: true,
                 showMiddleLine: false,
+                gradient: ui.Gradient.linear(
+                  const Offset(70, 50),
+                  Offset(MediaQuery.of(context).size.width / 2, 0),
+                  [Colors.red, Colors.green],
+                ),
               ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
-                color: const Color(0xFF1E1B26),
-              ),
-              padding: const EdgeInsets.only(left: 18),
-              margin: const EdgeInsets.symmetric(horizontal: 15),
             ),
             const SizedBox(height: 32),
             GradientText(
