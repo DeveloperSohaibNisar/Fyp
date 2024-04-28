@@ -8,6 +8,7 @@ class BotChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -27,7 +28,7 @@ class BotChat extends StatelessWidget {
         const SizedBox(width: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          constraints: const BoxConstraints(),
+          constraints: BoxConstraints(maxWidth: width-24-100),
           decoration: ShapeDecoration(
             color: const Color(0xFFF6F9FC),
             shape: RoundedRectangleBorder(
@@ -35,7 +36,7 @@ class BotChat extends StatelessWidget {
             ),
           ),
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 280),
+            constraints: BoxConstraints(),
             child: Text(
               senderMessage,
               textAlign: TextAlign.left,

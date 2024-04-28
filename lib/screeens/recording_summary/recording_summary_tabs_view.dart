@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_application/screeens/recording_summary/chat_view.dart';
+import 'package:fyp_application/screeens/recording_summary/summary_view.dart';
 
 class RecordTabView extends StatelessWidget {
   const RecordTabView({super.key});
@@ -22,7 +23,7 @@ class RecordTabView extends StatelessWidget {
                   padding: const EdgeInsets.all(3),
                   clipBehavior: Clip.antiAlias,
                   decoration: ShapeDecoration(
-                    color: Colors.white,
+                    color: Colors.transparent,
                     shape: RoundedRectangleBorder(
                       side:
                           const BorderSide(width: 1, color: Color(0xFFDEE5EE)),
@@ -58,7 +59,10 @@ class RecordTabView extends StatelessWidget {
           ),
           body: const TabBarView(
             children: [
-              Center(child: Text('Inbox Page')),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Summary(),
+              ),
               Center(child: Text('Archived Page')),
               ChatView(),
             ],

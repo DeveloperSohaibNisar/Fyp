@@ -7,6 +7,7 @@ class UserChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -25,6 +26,7 @@ class UserChat extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Container(
+          constraints: BoxConstraints(maxWidth: width-24-100),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: ShapeDecoration(
             gradient: const LinearGradient(
@@ -37,7 +39,7 @@ class UserChat extends StatelessWidget {
             ),
           ),
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 280),
+            //constraints: BoxConstraints(maxWidth: width-24-100),
             child: Text(
               senderMessage,
               textAlign: TextAlign.left,
