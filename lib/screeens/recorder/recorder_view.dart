@@ -1,316 +1,139 @@
 import 'dart:async';
+import 'dart:io';
 
-import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_sound/public/flutter_sound_recorder.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:record/record.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
-import 'dart:ui' as ui;
-// class RecorderView extends StatefulWidget {
-//   const RecorderView({super.key});
-//   static const routeName = '/record_audio';
 
-//   @override
-//   State<RecorderView> createState() => _RecorderViewState();
-// }
-
-// class _RecorderViewState extends State<RecorderView> {
-//   FlutterSoundRecorder? recorder;
-//   bool isRecorderReady = false;
-//   Timer? timer;
-//   Duration length = Duration.zero;
-
-//   Future toogleRecord() async {
-//     if (!isRecorderReady) return;
-//     if (recorder!.isStopped) {
-//       await record();
-//     } else if (recorder!.isPaused) {
-//       await resume();
-//     } else {
-//       await pause();
-//     }
-//   }
-
-//   void startTimer() {
-//     timer = Timer.periodic(
-//         const Duration(seconds: 1),
-//         (_) => setState(() {
-//               length = Duration(seconds: length.inSeconds + 1);
-//             }));
-//   }
-
-//   Future record() async {
-//     if (!isRecorderReady) return;
-//     await recorder!.startRecorder(toFile: 'temp_recording');
-//     startTimer();
-//   }
-
-//   Future stop() async {
-//     if (!isRecorderReady) return;
-//     await recorder!.stopRecorder();
-//     timer?.cancel();
-//   }
-
-//   Future pause() async {
-//     if (!isRecorderReady) return;
-//     await recorder!.pauseRecorder();
-//     timer?.cancel();
-//   }
-
-//   Future cancel() async {
-//     if (!isRecorderReady) return;
-//     await recorder!.closeRecorder();
-//     isRecorderReady = false;
-//     timer?.cancel();
-//     length = Duration.zero;
-//     initRecorder();
-//   }
-
-//   Future resume() async {
-//     if (!isRecorderReady) return;
-//     await recorder!.resumeRecorder();
-//     startTimer();
-//   }
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     initRecorder();
-//   }
-
-//   @override
-//   void dispose() {
-//     recorder!.closeRecorder();
-//     recorder = null;
-//     isRecorderReady = false;
-//     super.dispose();
-//   }
-
-//   Future initRecorder() async {
-//     recorder = FlutterSoundRecorder();
-//     await recorder!.openRecorder();
-//     recorder!.setSubscriptionDuration(const Duration(milliseconds: 1000));
-//     isRecorderReady = true;
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         systemOverlayStyle:
-//             const SystemUiOverlayStyle(statusBarColor: Colors.white),
-//         elevation: 2,
-//         leadingWidth: 95,
-//         leading: TextButton(
-//           style: ButtonStyle(
-//               shape: MaterialStateProperty.all(
-//             RoundedRectangleBorder(
-//               borderRadius: BorderRadius.circular(0),
-//             ),
-//           )),
-//           onPressed: () => Navigator.of(context).pop(),
-//           child: const Row(
-//             children: [
-//               Icon(Icons.arrow_back, color: Color.fromRGBO(0, 122, 255, 1)),
-//               SizedBox(width: 8),
-//               Text(
-//                 style: TextStyle(
-//                   color: Color.fromRGBO(0, 122, 255, 1),
-//                   fontSize: 17,
-//                 ),
-//                 'Back',
-//               ),
-//             ],
-//           ),
-//         ),
-//         centerTitle: true,
-//         title: const Text(
-//           style: TextStyle(
-//             fontSize: 17,
-//             fontWeight: FontWeight.bold,
-//           ),
-//           'Record Audio',
-//         ),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             SvgPicture.asset('assets/images/wave.svg'),
-//             const SizedBox(height: 32),
-//             GradientText(
-//               [length.inHours, length.inMinutes, length.inSeconds]
-//                   .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
-//                   .join(':'),
-//               style: const TextStyle(
-//                 fontSize: 42,
-//               ),
-//               gradientType: GradientType.linear,
-//               gradientDirection: GradientDirection.ltr,
-//               radius: .4,
-//               colors: const [
-//                 Color.fromRGBO(252, 138, 25, 1),
-//                 Color.fromRGBO(253, 119, 19, 1),
-//                 Color.fromRGBO(254, 96, 12, 1),
-//               ],
-//             ),
-//             const Text(
-//               style: TextStyle(
-//                 fontSize: 24,
-//                 color: Color.fromRGBO(142, 141, 157, 1),
-//               ),
-//               'Recording...',
-//             ),
-//             const SizedBox(height: 94),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Material(
-//                   elevation: 6,
-//                   shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(50)),
-//                   child: IconButton.filledTonal(
-//                     onPressed: () async {
-//                       await cancel();
-//                       setState(() {});
-//                     },
-//                     iconSize: 32,
-//                     style: ButtonStyle(
-//                         backgroundColor: MaterialStateProperty.all(
-//                       const Color.fromRGBO(252, 138, 25, .4),
-//                     )),
-//                     padding: const EdgeInsets.all(12),
-//                     color: Colors.white,
-//                     icon: const Icon(
-//                       Icons.close,
-//                       color: Color.fromRGBO(254, 96, 12, 1),
-//                       shadows: <Shadow>[
-//                         Shadow(
-//                             color: Color.fromRGBO(0, 0, 0, .10),
-//                             blurRadius: 4,
-//                             offset: Offset(0, 4))
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(width: 40),
-//                 Material(
-//                   elevation: 6,
-//                   shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(50)),
-//                   child: DecoratedBox(
-//                     decoration: const BoxDecoration(
-//                       shape: BoxShape.circle,
-//                       gradient: LinearGradient(
-//                         colors: [
-//                           Color.fromRGBO(252, 138, 25, 1),
-//                           Color.fromRGBO(253, 119, 19, 1),
-//                           Color.fromRGBO(254, 96, 12, 1),
-//                         ],
-//                       ),
-//                     ),
-//                     child: IconButton(
-//                       onPressed: () async {
-//                         await toogleRecord();
-//                         setState(() {});
-//                       },
-//                       iconSize: 48,
-//                       padding: const EdgeInsets.all(16),
-//                       color: Colors.white,
-//                       icon: Icon(
-//                         recorder!.isRecording ? Icons.pause : Icons.play_arrow,
-//                         shadows: const <Shadow>[
-//                           Shadow(
-//                               color: Color.fromRGBO(0, 0, 0, .25),
-//                               blurRadius: 4,
-//                               offset: Offset(0, 4))
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(width: 40),
-//                 Material(
-//                   elevation: 6,
-//                   shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(50)),
-//                   child: IconButton.filledTonal(
-//                     onPressed: () async {
-//                       await stop();
-//                       setState(() {});
-//                     },
-//                     iconSize: 32,
-//                     style: ButtonStyle(
-//                         backgroundColor: MaterialStateProperty.all(
-//                       const Color.fromRGBO(252, 138, 25, .4),
-//                     )),
-//                     padding: const EdgeInsets.all(12),
-//                     color: Colors.white,
-//                     icon: const Icon(
-//                       Icons.done,
-//                       color: Color.fromRGBO(254, 96, 12, 1),
-//                       shadows: <Shadow>[
-//                         Shadow(
-//                             color: Color.fromRGBO(0, 0, 0, .10),
-//                             blurRadius: 4,
-//                             offset: Offset(0, 4))
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-class RecorderView2 extends StatefulWidget {
-  const RecorderView2({super.key});
-  static const routeName = '/record_audio2';
+class RecorderView extends StatefulWidget {
+  const RecorderView({super.key});
+  static const routeName = '/record_audio';
 
   @override
-  State<RecorderView2> createState() => _RecorderView2State();
+  State<RecorderView> createState() => _RecorderViewState();
 }
 
-class _RecorderView2State extends State<RecorderView2> {
-  RecorderController controller = RecorderController();
+class _RecorderViewState extends State<RecorderView> {
+  Duration _recordDuration = Duration.zero;
+  bool isRecording = false;
+  Timer? _timer;
+  late final AudioRecorder _audioRecorder;
+  StreamSubscription<RecordState>? _recordSub;
+  StreamSubscription<Amplitude>? _amplitudeSub;
+  List<Amplitude> samples = [];
 
-  Timer? timer;
-  Duration length = Duration.zero;
-
-  bool recording = false;
+  Future toogleRecord() async {
+    if (await _audioRecorder.isPaused()) {
+      await resume();
+    } else if (await _audioRecorder.isRecording()) {
+      await pause();
+    } else {
+      await record();
+    }
+  }
 
   void startTimer() {
-    timer = Timer.periodic(
+    _timer = Timer.periodic(
         const Duration(seconds: 1),
         (_) => setState(() {
-              length = Duration(seconds: length.inSeconds + 1);
+              _recordDuration =
+                  Duration(seconds: _recordDuration.inSeconds + 1);
             }));
+  }
+
+  Future<void> record() async {
+    try {
+      if (await _audioRecorder.hasPermission()) {
+        const encoder = AudioEncoder.aacLc;
+
+        if (!await _audioRecorder.isEncoderSupported(encoder)) {
+          return;
+        }
+
+        var dir = Directory('/storage/emulated/0/Download/').path;
+        var name = 'audio_${DateTime.now().millisecondsSinceEpoch}.m4a';
+        var path = dir + name;
+
+        const config = RecordConfig(encoder: encoder, numChannels: 1);
+        await _audioRecorder.start(config, path: path);
+
+        startTimer();
+
+        _amplitudeSub = _audioRecorder
+            .onAmplitudeChanged(const Duration(milliseconds: 800))
+            .listen((amp) {
+          if (kDebugMode) {
+            print(amp.current);
+          }
+          setState(() {
+            samples.add(amp);
+          });
+        });
+
+        setState(() {
+          isRecording = true;
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> stop() async {
+    final path = await _audioRecorder.stop();
+    if (kDebugMode) {
+      print(path);
+    }
+    _timer?.cancel();
+    setState(() {
+      isRecording = false;
+    });
+  }
+
+  Future<void> pause() async {
+    await _audioRecorder.pause();
+    _timer?.cancel();
+    setState(() {
+      isRecording = false;
+    });
+  }
+
+  Future<void> cancel() async {
+    _audioRecorder.stop();
+    _timer?.cancel();
+    _recordSub?.cancel();
+    _amplitudeSub?.cancel();
+    _recordDuration = Duration.zero;
+    setState(() {
+      isRecording = false;
+      samples = [];
+    });
+  }
+
+  Future<void> resume() async {
+    await _audioRecorder.resume();
+    startTimer();
+    setState(() {
+      isRecording = true;
+    });
   }
 
   @override
   void initState() {
-    controller.updateFrequency =
-        const Duration(milliseconds: 50); // Update speed of new wave
-    // controller.androidEncoder = AndroidEncoder.aac; // Changing android encoder
-    // controller.androidOutputFormat =
-    //     AndroidOutputFormat.mpeg4; // Changing android output format
-    // controller.iosEncoder =
-    //     IosEncoder.kAudioFormatMPEG4AAC; // Changing ios encoder
-    // controller.sampleRate = 44100; // Updating sample rate
-    // controller.bitRate = 48000; // Updating bitrate
-
+    _audioRecorder = AudioRecorder();
     super.initState();
   }
 
   @override
-  void dispose() {
-    timer?.cancel();
-    controller.dispose();
+  dispose() {
+    _timer?.cancel();
+    _recordSub?.cancel();
+    _amplitudeSub?.cancel();
+    _audioRecorder.dispose();
     super.dispose();
   }
 
@@ -350,36 +173,23 @@ class _RecorderView2State extends State<RecorderView2> {
             fontSize: 17,
             fontWeight: FontWeight.bold,
           ),
-          'Record Audio 2',
+          'Record Audio',
         ),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // SvgPicture.asset('assets/images/wave.svg'),
-            AudioWaveforms(
-              size: Size(MediaQuery.of(context).size.width - 24, 150),
-              recorderController: controller,
-              enableGesture: false,
-              waveStyle: WaveStyle(
-                waveColor: Colors.blue,
-                showDurationLabel: true,
-                scaleFactor: 800000,
-                spacing: 8.0,
-                showBottom: false,
-                extendWaveform: true,
-                showMiddleLine: false,
-                gradient: ui.Gradient.linear(
-                  const Offset(70, 50),
-                  Offset(MediaQuery.of(context).size.width / 2, 0),
-                  [Colors.red, Colors.green],
-                ),
-              ),
-            ),
-            const SizedBox(height: 32),
+            Wave(samples: samples),
+
+            // Text(_amplitude != null ? _amplitude!.current.toString() : 'null'),
+            // const SizedBox(height: 32),
             GradientText(
-              [length.inHours, length.inMinutes, length.inSeconds]
+              [
+                _recordDuration.inHours,
+                _recordDuration.inMinutes,
+                _recordDuration.inSeconds
+              ]
                   .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
                   .join(':'),
               style: const TextStyle(
@@ -394,13 +204,15 @@ class _RecorderView2State extends State<RecorderView2> {
                 Color.fromRGBO(254, 96, 12, 1),
               ],
             ),
-            const Text(
-              style: TextStyle(
-                fontSize: 24,
-                color: Color.fromRGBO(142, 141, 157, 1),
-              ),
-              'Recording...',
-            ),
+            isRecording
+                ? const Text(
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Color.fromRGBO(142, 141, 157, 1),
+                    ),
+                    'Recording...',
+                  )
+                : const SizedBox(),
             const SizedBox(height: 94),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -410,13 +222,8 @@ class _RecorderView2State extends State<RecorderView2> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50)),
                   child: IconButton.filledTonal(
-                    onPressed: () {
-                      controller.stop();
-                      timer!.cancel();
-                      length = Duration.zero;
-                      setState(() {
-                        recording = false;
-                      });
+                    onPressed: () async {
+                      await cancel();
                     },
                     iconSize: 32,
                     style: ButtonStyle(
@@ -454,26 +261,14 @@ class _RecorderView2State extends State<RecorderView2> {
                       ),
                     ),
                     child: IconButton(
-                      onPressed: () {
-                        if (recording) {
-                          controller.pause();
-                          timer!.cancel();
-                          setState(() {
-                            recording = false;
-                          });
-                        } else {
-                          controller.record();
-                          startTimer();
-                          setState(() {
-                            recording = true;
-                          });
-                        }
+                      onPressed: () async {
+                        await toogleRecord();
                       },
                       iconSize: 48,
                       padding: const EdgeInsets.all(16),
                       color: Colors.white,
                       icon: Icon(
-                        recording ? Icons.pause : Icons.play_arrow,
+                        isRecording ? Icons.pause : Icons.play_arrow,
                         shadows: const <Shadow>[
                           Shadow(
                               color: Color.fromRGBO(0, 0, 0, .25),
@@ -491,11 +286,7 @@ class _RecorderView2State extends State<RecorderView2> {
                       borderRadius: BorderRadius.circular(50)),
                   child: IconButton.filledTonal(
                     onPressed: () async {
-                      controller.stop(false);
-                      timer!.cancel();
-                      setState(() {
-                        recording = false;
-                      });
+                      await stop();
                     },
                     iconSize: 32,
                     style: ButtonStyle(
@@ -518,6 +309,68 @@ class _RecorderView2State extends State<RecorderView2> {
                 ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Wave extends StatelessWidget {
+  const Wave({
+    super.key,
+    required this.samples,
+  });
+  final List<Amplitude> samples;
+
+  @override
+  Widget build(BuildContext context) {
+    double minVolume = -30.0;
+    int maxSampleLength = 40;
+    int sampleSize = samples.length;
+
+    double updateVolume(ampl) {
+      return (ampl.current - minVolume) / minVolume;
+    }
+
+    double volume0to(double maxVolumeToDisplay, ampl) {
+      return (updateVolume(ampl) * maxVolumeToDisplay).toDouble().abs();
+    }
+
+    List<Amplitude> result = samples;
+    if (sampleSize > maxSampleLength) {
+      result = samples.skip(sampleSize - maxSampleLength).toList();
+    }
+
+    return SizedBox(
+      height: 130,
+      child: ShaderMask(
+        shaderCallback: (Rect bounds) {
+          return const LinearGradient(
+                  colors: [
+                    Color.fromRGBO(252, 138, 25, 1),
+                    Color.fromRGBO(253, 119, 19, 1),
+                    Color.fromRGBO(254, 96, 12, 1),
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  stops: [0.0, 0.5, 1.0],
+                  tileMode: TileMode.clamp)
+              .createShader(bounds);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            for (var i in result)
+              Container(
+                margin: const EdgeInsets.only(right: 5),
+                width: 3,
+                height: i.current.isFinite && !i.current.isNaN
+                    ? volume0to(110, i)
+                    : 14,
+                color: Colors.white,
+              ),
           ],
         ),
       ),

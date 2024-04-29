@@ -65,35 +65,39 @@ class ChatView extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 30,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width:260,
+            const SizedBox(
+              width: 260,
               child: Expanded(
                 child: TextField(
                   decoration: InputDecoration(
                     fillColor: Color(0xFFF6F9FC),
                     hintText: "Write message...",
                     hintStyle: TextStyle(color: Colors.black54),
-                    border:InputBorder.none,
+                    border: InputBorder.none,
                   ),
                 ),
               ),
             ),
             FloatingActionButton(
-              onPressed: (){},
-              shape: CircleBorder(
+              onPressed: () {},
+              shape: const CircleBorder(
                 side: BorderSide.none,
-                eccentricity : 1.0,
+                eccentricity: 1.0,
               ),
-              child: Icon(Icons.send,color: Colors.white,size: 30,),
               backgroundColor: Colors.transparent,
               elevation: 0,
+              child: const Icon(
+                Icons.send,
+                color: Colors.white,
+                size: 30,
+              ),
             ),
           ],
         ),

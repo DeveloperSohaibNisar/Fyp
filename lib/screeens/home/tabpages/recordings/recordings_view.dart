@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp_application/screeens/home/tabpages/recordings/recodrding_list.dart';
 import 'package:fyp_application/screeens/home/tabpages/recordings/recording_filter.dart';
 import 'package:fyp_application/screeens/recorder/recorder_view.dart';
@@ -12,22 +12,22 @@ import 'package:permission_handler/permission_handler.dart';
 class RecordingView extends StatelessWidget {
   const RecordingView({super.key});
 
-  static const _backgroundColor = Color(0xFFF15BB5);
+  // static const _backgroundColor = Color(0xFFF15BB5);
 
-  static const _colors = [
-    Color(0xFFFEE440),
-    Color(0xFF00BBF9),
-  ];
+  // static const _colors = [
+  //   Color(0xFFFEE440),
+  //   Color(0xFF00BBF9),
+  // ];
 
-  static const _durations = [
-    5000,
-    4000,
-  ];
+  // static const _durations = [
+  //   5000,
+  //   4000,
+  // ];
 
-  static const _heightPercentages = [
-    0.65,
-    0.66,
-  ];
+  // static const _heightPercentages = [
+  //   0.65,
+  //   0.66,
+  // ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +92,7 @@ class RecordingView extends StatelessWidget {
                             break;
                           case PermissionStatus.granted:
                             Navigator.restorablePushNamed(
-                                context, RecorderView2.routeName);
+                                context, RecorderView.routeName);
                           default:
                         }
                       },
