@@ -16,13 +16,16 @@ class RecorderView extends StatefulWidget {
 }
 
 class _RecorderViewState extends State<RecorderView> {
-  Duration _recordDuration = Duration.zero;
-  bool isRecording = false;
-  Timer? _timer;
+  final double minVolume = -30.0;
+  final GlobalKey<AnimatedListState> _recorderwavekey =
+      GlobalKey<AnimatedListState>();
   late final AudioRecorder _audioRecorder;
   StreamSubscription<RecordState>? _recordSub;
   StreamSubscription<Amplitude>? _amplitudeSub;
   List<Amplitude> samples = [];
+  Duration _recordDuration = Duration.zero;
+  Timer? _timer;
+  bool isRecording = false;
 
   Future toogleRecord() async {
     if (await _audioRecorder.isPaused()) {
@@ -62,19 +65,16 @@ class _RecorderViewState extends State<RecorderView> {
         startTimer();
 
         _amplitudeSub = _audioRecorder
-            .onAmplitudeChanged(const Duration(milliseconds: 800))
+            .onAmplitudeChanged(const Duration(milliseconds: 300))
             .listen((amp) {
           if (kDebugMode) {
             print(amp.current);
           }
-          setState(() {
-            samples.add(amp);
-          });
+          samples.insert(0, amp);
+          _recorderwavekey.currentState?.insertItem(samples.length - 1);
         });
 
-        setState(() {
-          isRecording = true;
-        });
+        isRecording = true;
       }
     } catch (e) {
       if (kDebugMode) {
@@ -89,37 +89,29 @@ class _RecorderViewState extends State<RecorderView> {
       print(path);
     }
     _timer?.cancel();
-    setState(() {
-      isRecording = false;
-    });
+    isRecording = false;
   }
 
   Future<void> pause() async {
     await _audioRecorder.pause();
     _timer?.cancel();
-    setState(() {
-      isRecording = false;
-    });
+    isRecording = false;
   }
 
   Future<void> cancel() async {
-    _audioRecorder.stop();
+    _audioRecorder.cancel();
     _timer?.cancel();
     _recordSub?.cancel();
     _amplitudeSub?.cancel();
     _recordDuration = Duration.zero;
-    setState(() {
-      isRecording = false;
-      samples = [];
-    });
+    isRecording = false;
+    _clearAllItems();
   }
 
   Future<void> resume() async {
     await _audioRecorder.resume();
     startTimer();
-    setState(() {
-      isRecording = true;
-    });
+    isRecording = true;
   }
 
   @override
@@ -130,11 +122,26 @@ class _RecorderViewState extends State<RecorderView> {
 
   @override
   dispose() {
-    _timer?.cancel();
-    _recordSub?.cancel();
-    _amplitudeSub?.cancel();
+    cancel();
     _audioRecorder.dispose();
     super.dispose();
+  }
+
+  void _clearAllItems() {
+    for (var i = 0; i <= samples.length - 1; i++) {
+      _recorderwavekey.currentState?.removeItem(0, (context, animation) {
+        return Container();
+      });
+    }
+    samples.clear();
+  }
+
+  double updateVolume(ampl) {
+    return (ampl.current - minVolume) / minVolume;
+  }
+
+  double volume0to(double maxVolumeToDisplay, ampl) {
+    return (updateVolume(ampl) * maxVolumeToDisplay).toDouble().abs();
   }
 
   @override
@@ -176,202 +183,180 @@ class _RecorderViewState extends State<RecorderView> {
           'Record Audio',
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Wave(samples: samples),
-
-            // Text(_amplitude != null ? _amplitude!.current.toString() : 'null'),
-            // const SizedBox(height: 32),
-            GradientText(
-              [
-                _recordDuration.inHours,
-                _recordDuration.inMinutes,
-                _recordDuration.inSeconds
-              ]
-                  .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
-                  .join(':'),
-              style: const TextStyle(
-                fontSize: 42,
-              ),
-              gradientType: GradientType.linear,
-              gradientDirection: GradientDirection.ltr,
-              radius: .4,
-              colors: const [
-                Color.fromRGBO(252, 138, 25, 1),
-                Color.fromRGBO(253, 119, 19, 1),
-                Color.fromRGBO(254, 96, 12, 1),
-              ],
-            ),
-            isRecording
-                ? const Text(
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Color.fromRGBO(142, 141, 157, 1),
-                    ),
-                    'Recording...',
-                  )
-                : const SizedBox(),
-            const SizedBox(height: 94),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Material(
-                  elevation: 6,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)),
-                  child: IconButton.filledTonal(
-                    onPressed: () async {
-                      await cancel();
-                    },
-                    iconSize: 32,
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                      const Color.fromRGBO(252, 138, 25, .4),
-                    )),
-                    padding: const EdgeInsets.all(12),
-                    color: Colors.white,
-                    icon: const Icon(
-                      Icons.close,
-                      color: Color.fromRGBO(254, 96, 12, 1),
-                      shadows: <Shadow>[
-                        Shadow(
-                            color: Color.fromRGBO(0, 0, 0, .10),
-                            blurRadius: 4,
-                            offset: Offset(0, 4))
-                      ],
-                    ),
-                  ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 130,
+                child: ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return const LinearGradient(
+                            colors: [
+                              Color.fromRGBO(252, 138, 25, 1),
+                              Color.fromRGBO(253, 119, 19, 1),
+                              Color.fromRGBO(254, 96, 12, 1),
+                            ],
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            stops: [0.0, 0.5, 1.0],
+                            tileMode: TileMode.clamp)
+                        .createShader(bounds);
+                  },
+                  child: AnimatedList(
+                      key: _recorderwavekey,
+                      scrollDirection: Axis.horizontal,
+                      reverse: true,
+                      itemBuilder: (context, index, animation) {
+                        return Center(
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 5),
+                            width: 3,
+                            height: samples[index].current.isFinite &&
+                                    !samples[index].current.isNaN
+                                ? volume0to(110, samples[index])
+                                : 14,
+                            color: Colors.white,
+                          ),
+                        );
+                      }),
                 ),
-                const SizedBox(width: 40),
-                Material(
-                  elevation: 6,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)),
-                  child: DecoratedBox(
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          Color.fromRGBO(252, 138, 25, 1),
-                          Color.fromRGBO(253, 119, 19, 1),
-                          Color.fromRGBO(254, 96, 12, 1),
-                        ],
+              ),
+
+              // Text(_amplitude != null ? _amplitude!.current.toString() : 'null'),
+              // const SizedBox(height: 32),
+              GradientText(
+                [
+                  _recordDuration.inHours,
+                  _recordDuration.inMinutes,
+                  _recordDuration.inSeconds
+                ]
+                    .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+                    .join(':'),
+                style: const TextStyle(
+                  fontSize: 42,
+                ),
+                gradientType: GradientType.linear,
+                gradientDirection: GradientDirection.ltr,
+                radius: .4,
+                colors: const [
+                  Color.fromRGBO(252, 138, 25, 1),
+                  Color.fromRGBO(253, 119, 19, 1),
+                  Color.fromRGBO(254, 96, 12, 1),
+                ],
+              ),
+              isRecording
+                  ? const Text(
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Color.fromRGBO(142, 141, 157, 1),
                       ),
-                    ),
-                    child: IconButton(
+                      'Recording...',
+                    )
+                  : const SizedBox(),
+              const SizedBox(height: 94),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Material(
+                    elevation: 6,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    child: IconButton.filledTonal(
                       onPressed: () async {
-                        await toogleRecord();
+                        await cancel();
+                        setState(() {});
                       },
-                      iconSize: 48,
-                      padding: const EdgeInsets.all(16),
+                      iconSize: 32,
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                        const Color.fromRGBO(252, 138, 25, .4),
+                      )),
+                      padding: const EdgeInsets.all(12),
                       color: Colors.white,
-                      icon: Icon(
-                        isRecording ? Icons.pause : Icons.play_arrow,
-                        shadows: const <Shadow>[
+                      icon: const Icon(
+                        Icons.close,
+                        color: Color.fromRGBO(254, 96, 12, 1),
+                        shadows: <Shadow>[
                           Shadow(
-                              color: Color.fromRGBO(0, 0, 0, .25),
+                              color: Color.fromRGBO(0, 0, 0, .10),
                               blurRadius: 4,
                               offset: Offset(0, 4))
                         ],
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 40),
-                Material(
-                  elevation: 6,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)),
-                  child: IconButton.filledTonal(
-                    onPressed: () async {
-                      await stop();
-                    },
-                    iconSize: 32,
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                      const Color.fromRGBO(252, 138, 25, .4),
-                    )),
-                    padding: const EdgeInsets.all(12),
-                    color: Colors.white,
-                    icon: const Icon(
-                      Icons.done,
-                      color: Color.fromRGBO(254, 96, 12, 1),
-                      shadows: <Shadow>[
-                        Shadow(
-                            color: Color.fromRGBO(0, 0, 0, .10),
-                            blurRadius: 4,
-                            offset: Offset(0, 4))
-                      ],
+                  const SizedBox(width: 40),
+                  Material(
+                    elevation: 6,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    child: DecoratedBox(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            Color.fromRGBO(252, 138, 25, 1),
+                            Color.fromRGBO(253, 119, 19, 1),
+                            Color.fromRGBO(254, 96, 12, 1),
+                          ],
+                        ),
+                      ),
+                      child: IconButton(
+                        onPressed: () async {
+                          await toogleRecord();
+                          setState(() {});
+                        },
+                        iconSize: 48,
+                        padding: const EdgeInsets.all(16),
+                        color: Colors.white,
+                        icon: Icon(
+                          isRecording ? Icons.pause : Icons.play_arrow,
+                          shadows: const <Shadow>[
+                            Shadow(
+                                color: Color.fromRGBO(0, 0, 0, .25),
+                                blurRadius: 4,
+                                offset: Offset(0, 4))
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Wave extends StatelessWidget {
-  const Wave({
-    super.key,
-    required this.samples,
-  });
-  final List<Amplitude> samples;
-
-  @override
-  Widget build(BuildContext context) {
-    double minVolume = -30.0;
-    int maxSampleLength = 40;
-    int sampleSize = samples.length;
-
-    double updateVolume(ampl) {
-      return (ampl.current - minVolume) / minVolume;
-    }
-
-    double volume0to(double maxVolumeToDisplay, ampl) {
-      return (updateVolume(ampl) * maxVolumeToDisplay).toDouble().abs();
-    }
-
-    List<Amplitude> result = samples;
-    if (sampleSize > maxSampleLength) {
-      result = samples.skip(sampleSize - maxSampleLength).toList();
-    }
-
-    return SizedBox(
-      height: 130,
-      child: ShaderMask(
-        shaderCallback: (Rect bounds) {
-          return const LinearGradient(
-                  colors: [
-                    Color.fromRGBO(252, 138, 25, 1),
-                    Color.fromRGBO(253, 119, 19, 1),
-                    Color.fromRGBO(254, 96, 12, 1),
-                  ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  stops: [0.0, 0.5, 1.0],
-                  tileMode: TileMode.clamp)
-              .createShader(bounds);
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            for (var i in result)
-              Container(
-                margin: const EdgeInsets.only(right: 5),
-                width: 3,
-                height: i.current.isFinite && !i.current.isNaN
-                    ? volume0to(110, i)
-                    : 14,
-                color: Colors.white,
+                  const SizedBox(width: 40),
+                  Material(
+                    elevation: 6,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    child: IconButton.filledTonal(
+                      onPressed: () async {
+                        await stop();
+                        setState(() {});
+                      },
+                      iconSize: 32,
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                        const Color.fromRGBO(252, 138, 25, .4),
+                      )),
+                      padding: const EdgeInsets.all(12),
+                      color: Colors.white,
+                      icon: const Icon(
+                        Icons.done,
+                        color: Color.fromRGBO(254, 96, 12, 1),
+                        shadows: <Shadow>[
+                          Shadow(
+                              color: Color.fromRGBO(0, 0, 0, .10),
+                              blurRadius: 4,
+                              offset: Offset(0, 4))
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-          ],
+            ],
+          ),
         ),
       ),
     );
