@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fyp_application/screeens/home/tabpages/notes/note_view.dart';
 import 'package:fyp_application/screeens/home/tabpages/pdf/pdf_view.dart';
 import 'package:fyp_application/screeens/home/tabpages/recordings/recordings_view.dart';
@@ -144,8 +143,10 @@ class _HomeViewState extends State<HomeView> {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SvgPicture.asset(
-                  'assets/images/vector1.svg',
+                const Image(
+                  image: AssetImage('assets/images/bottomwave.png'),
+                  width: double.infinity,
+                  fit: BoxFit.fitWidth,
                 ),
                 Container(
                   width: double.infinity,
@@ -160,8 +161,9 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                   child: AnimatedSwitcher(
-                      duration: const Duration(seconds: 1),
-                      child: _bottomSheetButton),
+                    duration: const Duration(seconds: 1),
+                    child: _bottomSheetButton,
+                  ),
                 ),
               ],
             );
