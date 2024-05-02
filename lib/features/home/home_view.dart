@@ -1,17 +1,23 @@
+import 'dart:js';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp_application/screeens/home/tabpages/notes/note_view.dart';
-import 'package:fyp_application/screeens/home/tabpages/pdf/pdf_view.dart';
-import 'package:fyp_application/screeens/home/tabpages/recordings/recordings_view.dart';
-import 'package:fyp_application/screeens/settings/settings_view.dart';
+import 'package:flutter/widgets.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:fyp_application/screeens/recorder/recorder_view.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../features/settings/settings_view.dart';
+import '../recorder/recorder_view.dart';
+import 'tabpages/notes/note_view.dart';
+import 'tabpages/pdf/pdf_view.dart';
+import 'tabpages/recordings/recordings_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
-  static const routeName = '/';
+  static const routeName = '/Home';
+
+
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -46,6 +52,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -127,12 +134,15 @@ class _HomeViewState extends State<HomeView> {
             ),
           ],
         ),
-        bottomSheet: BottomSheet(
-          backgroundColor: Colors.white,
+
+        bottomNavigationBar: BottomSheet(
+          constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width),
+          backgroundColor: Colors.transparent,
           elevation: 0,
           enableDrag: false,
           onClosing: () {},
           builder: (BuildContext context) {
+
             final TabController tabController =
                 DefaultTabController.of(context);
             tabController.addListener(() {
@@ -143,9 +153,9 @@ class _HomeViewState extends State<HomeView> {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Image(
+                Image(
                   image: AssetImage('assets/images/bottomwave.png'),
-                  width: double.infinity,
+                  width: MediaQuery.of(context).size.width,
                   fit: BoxFit.fitWidth,
                 ),
                 Container(
@@ -176,6 +186,7 @@ class _HomeViewState extends State<HomeView> {
             NoteView(),
           ],
         ),
+
       ),
     );
   }

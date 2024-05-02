@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_application/state/app_state.dart';
-import 'package:fyp_application/utilities/consts.dart';
+import 'package:fyp_application/core/constants/consts.dart';
 import 'package:provider/provider.dart';
 
-class PdfFilterContainer extends StatelessWidget {
-  const PdfFilterContainer({super.key});
+class RecordingFilterContainer extends StatelessWidget {
+  const RecordingFilterContainer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class PdfFilterContainer extends StatelessWidget {
         child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(style: TextStyle(fontSize: 18), 'PDF\'s'),
+              Text(style: TextStyle(fontSize: 18), 'Recordings'),
               SizedBox(height: 8),
               Row(
                 children: [
@@ -61,7 +61,7 @@ class SortToogle extends StatelessWidget {
     var appState = context.watch<AppState>();
     return IconButton(
         onPressed: () {
-          appState.tooglePdfsOrder();
+          appState.toogleRecordingsOrder();
         },
         icon: const Icon(Icons.swap_vert));
   }
@@ -75,32 +75,33 @@ class SortMenu extends StatefulWidget {
 }
 
 class _SortMenuState extends State<SortMenu> {
-  PdfSortMenuItems? selectedItem;
+  RecordingSortMenuItems? selectedItem;
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
-    return PopupMenuButton<PdfSortMenuItems>(
+    return PopupMenuButton<RecordingSortMenuItems>(
       icon: const Icon(Icons.sort),
       initialValue: selectedItem,
-      onSelected: (PdfSortMenuItems item) {
+      onSelected: (RecordingSortMenuItems item) {
         setState(() {
           selectedItem = item;
         });
-        appState.sortPdfs(selectedItem);
+        appState.sortRecodings(selectedItem);
       },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<PdfSortMenuItems>>[
-        const PopupMenuItem<PdfSortMenuItems>(
-          value: PdfSortMenuItems.title,
+      itemBuilder: (BuildContext context) =>
+          <PopupMenuEntry<RecordingSortMenuItems>>[
+        const PopupMenuItem<RecordingSortMenuItems>(
+          value: RecordingSortMenuItems.title,
           child: Text('Title'),
         ),
-        const PopupMenuItem<PdfSortMenuItems>(
-          value: PdfSortMenuItems.date,
+        const PopupMenuItem<RecordingSortMenuItems>(
+          value: RecordingSortMenuItems.date,
           child: Text('Upload Date'),
         ),
-        const PopupMenuItem<PdfSortMenuItems>(
-          value: PdfSortMenuItems.pages,
-          child: Text('Pages'),
+        const PopupMenuItem<RecordingSortMenuItems>(
+          value: RecordingSortMenuItems.length,
+          child: Text('Length'),
         ),
       ],
     );

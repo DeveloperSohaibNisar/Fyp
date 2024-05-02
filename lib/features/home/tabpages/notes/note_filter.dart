@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_application/state/app_state.dart';
-import 'package:fyp_application/utilities/consts.dart';
+import 'package:fyp_application/core/constants/consts.dart';
 import 'package:provider/provider.dart';
 
-class RecordingFilterContainer extends StatelessWidget {
-  const RecordingFilterContainer({super.key});
+class NoteFilterContainer extends StatelessWidget {
+  const NoteFilterContainer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class RecordingFilterContainer extends StatelessWidget {
         child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(style: TextStyle(fontSize: 18), 'Recordings'),
+              Text(style: TextStyle(fontSize: 18), 'Notes'),
               SizedBox(height: 8),
               Row(
                 children: [
@@ -61,7 +61,7 @@ class SortToogle extends StatelessWidget {
     var appState = context.watch<AppState>();
     return IconButton(
         onPressed: () {
-          appState.toogleRecordingsOrder();
+          appState.toogleNotesOrder();
         },
         icon: const Icon(Icons.swap_vert));
   }
@@ -75,33 +75,37 @@ class SortMenu extends StatefulWidget {
 }
 
 class _SortMenuState extends State<SortMenu> {
-  RecordingSortMenuItems? selectedItem;
+  NotesSortMenuItems? selectedItem;
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
-    return PopupMenuButton<RecordingSortMenuItems>(
+    return PopupMenuButton<NotesSortMenuItems>(
       icon: const Icon(Icons.sort),
       initialValue: selectedItem,
-      onSelected: (RecordingSortMenuItems item) {
+      onSelected: (NotesSortMenuItems item) {
         setState(() {
           selectedItem = item;
         });
-        appState.sortRecodings(selectedItem);
+        appState.sortNotes(selectedItem);
       },
       itemBuilder: (BuildContext context) =>
-          <PopupMenuEntry<RecordingSortMenuItems>>[
-        const PopupMenuItem<RecordingSortMenuItems>(
-          value: RecordingSortMenuItems.title,
+          <PopupMenuEntry<NotesSortMenuItems>>[
+        const PopupMenuItem<NotesSortMenuItems>(
+          value: NotesSortMenuItems.title,
           child: Text('Title'),
         ),
-        const PopupMenuItem<RecordingSortMenuItems>(
-          value: RecordingSortMenuItems.date,
-          child: Text('Upload Date'),
+        const PopupMenuItem<NotesSortMenuItems>(
+          value: NotesSortMenuItems.creationDate,
+          child: Text('Creation Date'),
         ),
-        const PopupMenuItem<RecordingSortMenuItems>(
-          value: RecordingSortMenuItems.length,
-          child: Text('Length'),
+        const PopupMenuItem<NotesSortMenuItems>(
+          value: NotesSortMenuItems.editDate,
+          child: Text('Last Edited'),
+        ),
+        const PopupMenuItem<NotesSortMenuItems>(
+          value: NotesSortMenuItems.lines,
+          child: Text('Lines'),
         ),
       ],
     );

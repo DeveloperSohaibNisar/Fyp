@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_application/screeens/home/tabpages/notes/note_list.dart';
-import 'package:fyp_application/screeens/home/tabpages/notes/note_filter.dart';
+
+import 'note_filter.dart';
+import 'note_list.dart';
+
 
 class NoteView extends StatelessWidget {
   const NoteView({super.key});

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fyp_application/core/constants/widgets/bot_chat.dart';
 
-import '../../widgets/bot_chat.dart';
-import '../../widgets/user_chat.dart';
-
+import '../../core/constants/widgets/user_chat.dart';
 class ChatView extends StatelessWidget {
   const ChatView({super.key});
 

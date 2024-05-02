@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_application/state/app_state.dart';
-import 'package:fyp_application/utilities/consts.dart';
+import 'package:fyp_application/core/constants/consts.dart';
 import 'package:provider/provider.dart';
 
-class NoteFilterContainer extends StatelessWidget {
-  const NoteFilterContainer({super.key});
+class PdfFilterContainer extends StatelessWidget {
+  const PdfFilterContainer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class NoteFilterContainer extends StatelessWidget {
         child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(style: TextStyle(fontSize: 18), 'Notes'),
+              Text(style: TextStyle(fontSize: 18), 'PDF\'s'),
               SizedBox(height: 8),
               Row(
                 children: [
@@ -61,7 +61,7 @@ class SortToogle extends StatelessWidget {
     var appState = context.watch<AppState>();
     return IconButton(
         onPressed: () {
-          appState.toogleNotesOrder();
+          appState.tooglePdfsOrder();
         },
         icon: const Icon(Icons.swap_vert));
   }
@@ -75,37 +75,32 @@ class SortMenu extends StatefulWidget {
 }
 
 class _SortMenuState extends State<SortMenu> {
-  NotesSortMenuItems? selectedItem;
+  PdfSortMenuItems? selectedItem;
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
-    return PopupMenuButton<NotesSortMenuItems>(
+    return PopupMenuButton<PdfSortMenuItems>(
       icon: const Icon(Icons.sort),
       initialValue: selectedItem,
-      onSelected: (NotesSortMenuItems item) {
+      onSelected: (PdfSortMenuItems item) {
         setState(() {
           selectedItem = item;
         });
-        appState.sortNotes(selectedItem);
+        appState.sortPdfs(selectedItem);
       },
-      itemBuilder: (BuildContext context) =>
-          <PopupMenuEntry<NotesSortMenuItems>>[
-        const PopupMenuItem<NotesSortMenuItems>(
-          value: NotesSortMenuItems.title,
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<PdfSortMenuItems>>[
+        const PopupMenuItem<PdfSortMenuItems>(
+          value: PdfSortMenuItems.title,
           child: Text('Title'),
         ),
-        const PopupMenuItem<NotesSortMenuItems>(
-          value: NotesSortMenuItems.creationDate,
-          child: Text('Creation Date'),
+        const PopupMenuItem<PdfSortMenuItems>(
+          value: PdfSortMenuItems.date,
+          child: Text('Upload Date'),
         ),
-        const PopupMenuItem<NotesSortMenuItems>(
-          value: NotesSortMenuItems.editDate,
-          child: Text('Last Edited'),
-        ),
-        const PopupMenuItem<NotesSortMenuItems>(
-          value: NotesSortMenuItems.lines,
-          child: Text('Lines'),
+        const PopupMenuItem<PdfSortMenuItems>(
+          value: PdfSortMenuItems.pages,
+          child: Text('Pages'),
         ),
       ],
     );

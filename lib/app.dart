@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:fyp_application/screeens/home/home_view.dart';
-import 'package:fyp_application/screeens/recording_summary/recording_summary_tabs_view.dart';
-import 'package:fyp_application/screeens/recorder/recorder_view.dart';
 import 'package:fyp_application/state/app_state.dart';
 import 'package:provider/provider.dart';
 
-import 'screeens/settings/settings_controller.dart';
-import 'screeens/settings/settings_view.dart';
+import 'features/home/home_view.dart';
+import 'features/login/welcome.dart';
+import 'features/recorder/recorder_view.dart';
+import 'features/recording_summary/recording_summary_tabs_view.dart';
+import 'features/settings/settings_controller.dart';
+import 'features/settings/settings_view.dart';
+
+
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
@@ -80,8 +83,11 @@ class MyApp extends StatelessWidget {
                     case RecordTabView.routeName:
                       return const RecordTabView();
                     case HomeView.routeName:
-                    default:
                       return const HomeView();
+                    case Welcome.routeName:
+                    default:
+                      return const Welcome();
+
                   }
                 },
               );

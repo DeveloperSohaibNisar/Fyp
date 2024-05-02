@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_application/utilities/summary_constant.dart';
+import 'package:fyp_application/core/constants/summary_constant.dart';
 
 class Summary extends StatelessWidget {
   const Summary({super.key});
@@ -8,26 +8,6 @@ class Summary extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            Container(
-              width: 25,
-              height: 25,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage("https://via.placeholder.com/25x25"),
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Container(
-          //width: 393,
-          height: 16,
-          clipBehavior: Clip.antiAlias,
-          decoration: const BoxDecoration(color: Color(0xFFF6F9FC)),
-        ),
         Container(
           child: const Summarytext(
               summarytext:

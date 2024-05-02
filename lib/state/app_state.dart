@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp_application/models/note_list_item.dart';
 import 'package:fyp_application/models/pdf_list_item.dart';
 import 'package:fyp_application/models/recording_list_item.dart';
-import 'package:fyp_application/utilities/consts.dart';
+import 'package:fyp_application/core/constants/consts.dart';
 
 class AppState extends ChangeNotifier {
   List<RecordingListItem> recodingdata = [
