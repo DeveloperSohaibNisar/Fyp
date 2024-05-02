@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -157,6 +155,8 @@ class _HomeViewState extends State<HomeView> {
                   image: AssetImage('assets/images/bottomwave.png'),
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.fitWidth,
+                  filterQuality: FilterQuality.high,
+
                 ),
                 Container(
                   width: double.infinity,

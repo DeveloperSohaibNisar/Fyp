@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-import 'chat_view.dart';
-import 'summary_view.dart';
-import 'transcribtion_view.dart';
+import 'package:fyp_application/features/pdf_summary/chat_view.dart';
+import 'package:fyp_application/features/pdf_summary/summary_view.dart';
+import 'package:fyp_application/features/pdf_summary/transcribtion_view.dart';
 
-class RecordTabView extends StatelessWidget {
-  const RecordTabView({super.key});
-  static const routeName = '/RecordTabView';
+class PdfTabsView extends StatelessWidget{
+  const PdfTabsView({super.key});
+  static const routeName = '/PdfTabView';
+
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
+
     return DefaultTabController(
-        length: 3,
-        child: Scaffold(
+
+      length: 3,
+      child: Scaffold(
           appBar: AppBar(
-            title: Text('Recording123'),
+            title: Text('PDF'),
             centerTitle: true,
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(90),
@@ -30,7 +33,7 @@ class RecordTabView extends StatelessWidget {
                         color: Colors.transparent,
                         shape: RoundedRectangleBorder(
                           side:
-                              const BorderSide(width: 1, color: Color(0xFFDEE5EE)),
+                          const BorderSide(width: 1, color: Color(0xFFDEE5EE)),
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp_application/features/pdf_summary/pdf_summary_tabs_view.dart';
 import 'package:fyp_application/state/app_state.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -53,7 +54,9 @@ class PdfList extends StatelessWidget {
                 const Icon(Icons.more_vert),
               ],
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.restorablePushNamed(context, PdfTabsView.routeName);
+            },
           );
         },
         separatorBuilder: ((context, index) => const Divider()),

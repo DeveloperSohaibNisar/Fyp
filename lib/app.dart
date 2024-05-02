@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:fyp_application/features/login/signin.dart';
+import 'package:fyp_application/features/login/signup.dart';
+import 'package:fyp_application/features/pdf_summary/pdf_summary_tabs_view.dart';
 import 'package:fyp_application/state/app_state.dart';
 import 'package:provider/provider.dart';
 
@@ -82,8 +85,14 @@ class MyApp extends StatelessWidget {
                       return const RecorderView();
                     case RecordTabView.routeName:
                       return const RecordTabView();
+                    case PdfTabsView.routeName:
+                      return const PdfTabsView();
                     case HomeView.routeName:
                       return const HomeView();
+                    case Signup.routeName:
+                      return const Signup();
+                    case SignIn.routeName:
+                      return const SignIn();
                     case Welcome.routeName:
                     default:
                       return const Welcome();
