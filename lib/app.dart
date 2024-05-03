@@ -14,8 +14,6 @@ import 'features/recording_summary/recording_summary_tabs_view.dart';
 import 'features/settings/settings_controller.dart';
 import 'features/settings/settings_view.dart';
 
-
-
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
   const MyApp({
@@ -95,8 +93,7 @@ class MyApp extends StatelessWidget {
                       return const SignIn();
                     case Welcome.routeName:
                     default:
-                      return const Welcome();
-
+                      return const HomeView();
                   }
                 },
               );

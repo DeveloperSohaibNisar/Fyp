@@ -26,7 +26,7 @@ class UserChat extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Container(
-          constraints: BoxConstraints(maxWidth: width-24-100),
+          constraints: BoxConstraints(maxWidth: width - 24 - 100),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: ShapeDecoration(
             gradient: const LinearGradient(
@@ -38,18 +38,15 @@ class UserChat extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
             ),
           ),
-          child: Container(
-            //constraints: BoxConstraints(maxWidth: width-24-100),
-            child: Text(
-              senderMessage,
-              textAlign: TextAlign.left,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 13,
-                fontFamily: 'Inria Sans',
-                fontWeight: FontWeight.w400,
-                height: 0,
-              ),
+          child: Text(
+            senderMessage,
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 13,
+              fontFamily: 'Inria Sans',
+              fontWeight: FontWeight.w400,
+              height: 0,
             ),
           ),
         ),

@@ -11,7 +11,7 @@ class Welcome extends StatelessWidget {
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment(1.00, 0.00),
             end: Alignment(-1, 0),
@@ -23,133 +23,133 @@ class Welcome extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           //mainAxisSize: MainAxisSize.max,
           children: [
-            Column(
+            const Column(
               children: [
                 Icon(
-                  size:60,
-                 Icons.image,
+                  size: 60,
+                  Icons.image,
                 ),
                 SizedBox(height: 24),
-                Container(
-                  child: const Center(
-                    child: Text(
-                      'Info-Verse',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 36,
-                        fontFamily: 'Allerta Stencil',
-                        fontWeight: FontWeight.w400,
-                        height: 0,
-                      ),
+                Center(
+                  child: Text(
+                    'Info-Verse',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 36,
+                      fontFamily: 'Allerta Stencil',
+                      fontWeight: FontWeight.w400,
+                      height: 0,
                     ),
                   ),
                 ),
               ],
             ),
-
             Column(
               children: [
-                Container(
-                  child: Text(
-                    'Welcome',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 36,
-                      fontFamily: 'Inria Sans',
-                      fontWeight: FontWeight.w700,
-                      height: 0,
-                      letterSpacing: 0.36,
-                    ),
+                const Text(
+                  'Welcome',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 36,
+                    fontFamily: 'Inria Sans',
+                    fontWeight: FontWeight.w700,
+                    height: 0,
+                    letterSpacing: 0.36,
                   ),
                 ),
-
-                SizedBox(height: 36,),
-
-                Container(
-                  child:Column(
-                    children: [
-
-                      Container(
-                        height: 53,
-                        constraints: BoxConstraints(minWidth: 321),
-                        padding: const EdgeInsets.symmetric(horizontal: 20,),
-                        //clipBehavior: Clip.antiAlias,
-                        decoration: ShapeDecoration(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              width: 2,
-                              strokeAlign: BorderSide.strokeAlignOutside,
-                              color: Colors.white,
-                            ),
-                            borderRadius: BorderRadius.circular(30),
+                const SizedBox(
+                  height: 36,
+                ),
+                Column(
+                  children: [
+                    Container(
+                      height: 53,
+                      constraints: const BoxConstraints(minWidth: 321),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                      //clipBehavior: Clip.antiAlias,
+                      decoration: ShapeDecoration(
+                        shape: RoundedRectangleBorder(
+                          side: const BorderSide(
+                            width: 2,
+                            strokeAlign: BorderSide.strokeAlignOutside,
+                            color: Colors.white,
+                          ),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: const StadiumBorder(),
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                        ),
+                        onPressed: () {
+                          Navigator.restorablePushNamed(
+                              context, SignIn.routeName);
+                        },
+                        child: const Text(
+                          'Sign In',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontFamily: 'Inria Sans',
+                            fontWeight: FontWeight.w400,
+                            height: 0,
                           ),
                         ),
-                        child: ElevatedButton(
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    Container(
+                      height: 53,
+                      constraints: const BoxConstraints(minWidth: 321),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        shadows: const [
+                          BoxShadow(
+                            color: Color(0x3F000000),
+                            blurRadius: 4,
+                            offset: Offset(0, 4),
+                            spreadRadius: 0,
+                          )
+                        ],
+                      ),
+                      child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            shape: const StadiumBorder(),
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
                           ),
-                          onPressed: (){Navigator.restorablePushNamed(context, SignIn.routeName);},
-                          child: Text('Sign In',
+                          onPressed: () {
+                            Navigator.restorablePushNamed(
+                                context, Signup.routeName);
+                          },
+                          child: const Text(
+                            'Sign Up',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Color(0xFFFC8A19),
                               fontSize: 24,
                               fontFamily: 'Inria Sans',
                               fontWeight: FontWeight.w400,
                               height: 0,
-                            ),),
-                        ),
-                      ),
-
-                      SizedBox(height: 24,),
-
-                      Container(
-                        height: 53,
-                        constraints: BoxConstraints(minWidth: 321),
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: ShapeDecoration(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          shadows: [
-                            BoxShadow(
-                              color: Color(0x3F000000),
-                              blurRadius: 4,
-                              offset: Offset(0, 4),
-                              spreadRadius: 0,
-                            )
-                          ],
-                        ),
-
-                        child:ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
                             ),
-                            onPressed: (){Navigator.restorablePushNamed(context, Signup.routeName);},
-                            child: Text('Sign Up',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Color(0xFFFC8A19),
-                                fontSize: 24,
-                                fontFamily: 'Inria Sans',
-                                fontWeight: FontWeight.w400,
-                                height: 0,
-                              ),
-                            )
-                        ),
-                      )
-                    ],
-                  ),
+                          )),
+                    )
+                  ],
                 ),
               ],
             ),
-
           ],
         ),
       ),

@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -14,8 +12,6 @@ import 'tabpages/recordings/recordings_view.dart';
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
   static const routeName = '/Home';
-
-
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -50,7 +46,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -132,15 +127,14 @@ class _HomeViewState extends State<HomeView> {
             ),
           ],
         ),
-
         bottomNavigationBar: BottomSheet(
-          constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width),
+          constraints:
+              BoxConstraints(minWidth: MediaQuery.of(context).size.width),
           backgroundColor: Colors.transparent,
           elevation: 0,
           enableDrag: false,
           onClosing: () {},
           builder: (BuildContext context) {
-
             final TabController tabController =
                 DefaultTabController.of(context);
             tabController.addListener(() {
@@ -152,11 +146,10 @@ class _HomeViewState extends State<HomeView> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Image(
-                  image: AssetImage('assets/images/bottomwave.png'),
+                  image: const AssetImage('assets/images/bottomwave.png'),
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.fitWidth,
                   filterQuality: FilterQuality.high,
-
                 ),
                 Container(
                   width: double.infinity,
@@ -186,7 +179,6 @@ class _HomeViewState extends State<HomeView> {
             NoteView(),
           ],
         ),
-
       ),
     );
   }

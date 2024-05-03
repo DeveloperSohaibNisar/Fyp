@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class BotChat extends StatelessWidget {
@@ -28,7 +27,7 @@ class BotChat extends StatelessWidget {
         const SizedBox(width: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          constraints: BoxConstraints(maxWidth: width-24-100),
+          constraints: BoxConstraints(maxWidth: width - 24 - 100),
           decoration: ShapeDecoration(
             color: const Color(0xFFF6F9FC),
             shape: RoundedRectangleBorder(
@@ -36,7 +35,7 @@ class BotChat extends StatelessWidget {
             ),
           ),
           child: Container(
-            constraints: BoxConstraints(),
+            constraints: const BoxConstraints(),
             child: Text(
               senderMessage,
               textAlign: TextAlign.left,

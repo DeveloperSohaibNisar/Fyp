@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp_application/core/constants/widgets/bot_chat.dart';
 
 import '../../core/constants/widgets/user_chat.dart';
+
 class ChatView extends StatelessWidget {
   const ChatView({super.key});
 
@@ -25,7 +26,8 @@ class ChatView extends StatelessWidget {
                 BotChat(senderMessage: "How can I help you?"),
                 SizedBox(height: 16),
                 UserChat(
-                  senderMessage: "What was the name of the father of alexender?",
+                  senderMessage:
+                      "What was the name of the father of alexender?",
                 ),
                 SizedBox(height: 16),
                 BotChat(
@@ -52,21 +54,22 @@ class ChatView extends StatelessWidget {
             padding: const EdgeInsets.all(18.0),
             child: Container(
               decoration: ShapeDecoration(
-                shadows: [
+                shadows: const [
                   BoxShadow(
                     color: Color(0x3F000000),
                     blurRadius: 4,
                     offset: Offset(0, 4),
                     spreadRadius: 0,
                   )
-                ], shape: RoundedRectangleBorder(
-                side: BorderSide(width: 2, color: Color(0xFFFC8A19)),
-                borderRadius: BorderRadius.circular(50),
-              ),
+                ],
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(width: 2, color: Color(0xFFFC8A19)),
+                  borderRadius: BorderRadius.circular(50),
+                ),
               ),
               child: TextField(
                 decoration: InputDecoration(
-                    hintStyle: TextStyle(
+                    hintStyle: const TextStyle(
                       color: Color(0xFF848488),
                       fontSize: 14,
                       fontFamily: 'Inria Sans',
@@ -79,8 +82,7 @@ class ChatView extends StatelessWidget {
                         borderSide: BorderSide.none),
                     fillColor: Colors.white,
                     filled: true,
-                    suffixIcon: const Icon(Icons.send)
-                ),
+                    suffixIcon: const Icon(Icons.send)),
               ),
             ),
           ),

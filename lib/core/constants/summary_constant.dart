@@ -1,18 +1,18 @@
-import'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
-class Summarytext extends StatelessWidget{
+class Summarytext extends StatelessWidget {
   final String summarytext;
   const Summarytext({super.key, required this.summarytext});
   @override
-  Widget build(BuildContext context){
-    double width= MediaQuery.of(context).size.width;
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Expanded(
       child: Container(
-        constraints: BoxConstraints(maxWidth: width-24-100),
+        constraints: BoxConstraints(maxWidth: width - 24 - 100),
         height: double.infinity,
         child: Text(
           summarytext,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 14,
             fontFamily: 'Calibri',
