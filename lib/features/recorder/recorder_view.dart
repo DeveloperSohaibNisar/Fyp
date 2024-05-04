@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:record/record.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class RecorderView extends StatefulWidget {
   const RecorderView({super.key});
@@ -194,16 +193,17 @@ class _RecorderViewState extends State<RecorderView> {
                 child: ShaderMask(
                   shaderCallback: (Rect bounds) {
                     return const LinearGradient(
-                            colors: [
-                              Color.fromRGBO(252, 138, 25, 1),
-                              Color.fromRGBO(253, 119, 19, 1),
-                              Color.fromRGBO(254, 96, 12, 1),
-                            ],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            stops: [0.0, 0.5, 1.0],
-                            tileMode: TileMode.clamp)
-                        .createShader(bounds);
+                      colors: [
+                        Color.fromRGBO(252, 138, 25, 1),
+                        Color.fromRGBO(253, 119, 19, 1),
+                        Color.fromRGBO(254, 96, 12, 1),
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      stops: [0.0, 0.5, 1.0],
+                      tileMode: TileMode.clamp,
+                    ).createShader(
+                        Rect.fromLTWH(0, 0, bounds.width, bounds.height));
                   },
                   child: AnimatedList(
                       key: _recorderwavekey,
@@ -227,25 +227,32 @@ class _RecorderViewState extends State<RecorderView> {
 
               // Text(_amplitude != null ? _amplitude!.current.toString() : 'null'),
               // const SizedBox(height: 32),
-              GradientText(
-                [
-                  _recordDuration.inHours,
-                  _recordDuration.inMinutes,
-                  _recordDuration.inSeconds
-                ]
-                    .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
-                    .join(':'),
-                style: const TextStyle(
-                  fontSize: 42,
+              ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return const LinearGradient(
+                    colors: [
+                      Color.fromRGBO(252, 138, 25, 1),
+                      Color.fromRGBO(253, 119, 19, 1),
+                      Color.fromRGBO(254, 96, 12, 1),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ).createShader(bounds);
+                },
+                child: Text(
+                  [
+                    _recordDuration.inHours,
+                    _recordDuration.inMinutes,
+                    _recordDuration.inSeconds
+                  ]
+                      .map(
+                          (seg) => seg.remainder(60).toString().padLeft(2, '0'))
+                      .join(':'),
+                  style: const TextStyle(
+                    fontSize: 42,
+                    color: Colors.white,
+                  ),
                 ),
-                gradientType: GradientType.linear,
-                gradientDirection: GradientDirection.ltr,
-                radius: .4,
-                colors: const [
-                  Color.fromRGBO(252, 138, 25, 1),
-                  Color.fromRGBO(253, 119, 19, 1),
-                  Color.fromRGBO(254, 96, 12, 1),
-                ],
               ),
               isRecording
                   ? const Text(

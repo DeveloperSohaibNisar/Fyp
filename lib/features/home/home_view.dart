@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -61,18 +60,37 @@ class _HomeViewState extends State<HomeView> {
           ),
           title: Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: GradientText(
-              'Info-Verse',
-              style: const TextStyle(
-                fontSize: 18,
+            // child: GradientText(
+            //   'Info-Verse',
+            //   style: const TextStyle(
+            //     fontSize: 18,
+            //   ),
+            //   gradientType: GradientType.linear,
+            //   gradientDirection: GradientDirection.ttb,
+            //   radius: .4,
+            //   colors: const [
+            //     Color.fromRGBO(31, 51, 228, 1),
+            //     Color.fromRGBO(6, 121, 225, 1),
+            //   ],
+            // ),
+            child: ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return const LinearGradient(
+                  colors: [
+                    Color.fromRGBO(31, 51, 228, 1),
+                    Color.fromRGBO(6, 121, 225, 1),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ).createShader(bounds);
+              },
+              child: const Text(
+                'Info-Verse',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                ),
               ),
-              gradientType: GradientType.linear,
-              gradientDirection: GradientDirection.ttb,
-              radius: .4,
-              colors: const [
-                Color.fromRGBO(31, 51, 228, 1),
-                Color.fromRGBO(6, 121, 225, 1),
-              ],
             ),
           ),
           bottom: PreferredSize(

@@ -24,6 +24,7 @@ class SeekBar extends StatefulWidget {
 
 class SeekBarState extends State<SeekBar> {
   double? _dragValue;
+  Duration _labelValue = Duration.zero;
   late SliderThemeData _sliderThemeData;
 
   @override
@@ -42,7 +43,7 @@ class SeekBarState extends State<SeekBar> {
         SliderTheme(
           data: _sliderThemeData.copyWith(
             thumbShape: HiddenThumbComponentShape(),
-            activeTrackColor: Colors.blue.shade100,
+            activeTrackColor: const Color.fromRGBO(254, 96, 12, .55),
             inactiveTrackColor: Colors.grey.shade300,
           ),
           child: ExcludeSemantics(
@@ -54,6 +55,7 @@ class SeekBarState extends State<SeekBar> {
               onChanged: (value) {
                 setState(() {
                   _dragValue = value;
+                  _labelValue = Duration(milliseconds: value.toInt());
                 });
                 if (widget.onChanged != null) {
                   widget.onChanged!(Duration(milliseconds: value.round()));
@@ -64,22 +66,31 @@ class SeekBarState extends State<SeekBar> {
                   widget.onChangeEnd!(Duration(milliseconds: value.round()));
                 }
                 _dragValue = null;
+                _labelValue = Duration.zero;
               },
             ),
           ),
         ),
         SliderTheme(
           data: _sliderThemeData.copyWith(
+            trackShape: const GredientSliderShape(),
             inactiveTrackColor: Colors.transparent,
+            showValueIndicator: ShowValueIndicator.always,
+            thumbColor: const Color.fromRGBO(254, 96, 12, 1),
+            valueIndicatorColor: const Color.fromRGBO(253, 119, 19, 1),
           ),
           child: Slider(
             min: 0.0,
             max: widget.duration.inMilliseconds.toDouble(),
             value: min(_dragValue ?? widget.position.inMilliseconds.toDouble(),
                 widget.duration.inMilliseconds.toDouble()),
+            label: [_labelValue.inMinutes, _labelValue.inSeconds]
+                .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+                .join(':'),
             onChanged: (value) {
               setState(() {
                 _dragValue = value;
+                _labelValue = Duration(milliseconds: value.toInt());
               });
               if (widget.onChanged != null) {
                 widget.onChanged!(Duration(milliseconds: value.round()));
@@ -90,24 +101,33 @@ class SeekBarState extends State<SeekBar> {
                 widget.onChangeEnd!(Duration(milliseconds: value.round()));
               }
               _dragValue = null;
+              _labelValue = Duration.zero;
             },
           ),
         ),
         Positioned(
-          right: 16.0,
-          bottom: 0.0,
+          left: 24.0,
+          bottom: -3,
           child: Text(
-              RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
-                      .firstMatch("$_remaining")
-                      ?.group(1) ??
-                  '$_remaining',
-              style: Theme.of(context).textTheme.bodySmall),
+            [widget.position.inMinutes, widget.position.inSeconds]
+                .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+                .join(':'),
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
+        Positioned(
+          right: 24.0,
+          bottom: -3,
+          child: Text(
+            [widget.duration.inMinutes, widget.duration.inSeconds]
+                .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+                .join(':'),
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ),
       ],
     );
   }
-
-  Duration get _remaining => widget.duration - widget.position;
 }
 
 class HiddenThumbComponentShape extends SliderComponentShape {
@@ -139,45 +159,167 @@ class PositionData {
   PositionData(this.position, this.bufferedPosition, this.duration);
 }
 
-void showSliderDialog({
-  required BuildContext context,
-  required String title,
-  required int divisions,
-  required double min,
-  required double max,
-  String valueSuffix = '',
-  required double value,
-  required Stream<double> stream,
-  required ValueChanged<double> onChanged,
-}) {
-  showDialog<void>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(title, textAlign: TextAlign.center),
-      content: StreamBuilder<double>(
-        stream: stream,
-        builder: (context, snapshot) => SizedBox(
-          height: 100.0,
-          child: Column(
-            children: [
-              Text('${snapshot.data?.toStringAsFixed(1)}$valueSuffix',
-                  style: const TextStyle(
-                      fontFamily: 'Fixed',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24.0)),
-              Slider(
-                divisions: divisions,
-                min: min,
-                max: max,
-                value: snapshot.data ?? value,
-                onChanged: onChanged,
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
-}
+class GredientSliderShape extends SliderTrackShape with BaseSliderTrackShape {
+  /// Create a slider track that draws two rectangles with rounded outer edges.
 
-T? ambiguate<T>(T? value) => value;
+  const GredientSliderShape();
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required TextDirection textDirection,
+    required Offset thumbCenter,
+    Offset? secondaryOffset,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    double additionalActiveTrackHeight = 2,
+  }) {
+    assert(sliderTheme.disabledActiveTrackColor != null);
+    assert(sliderTheme.disabledInactiveTrackColor != null);
+    assert(sliderTheme.activeTrackColor != null);
+    assert(sliderTheme.inactiveTrackColor != null);
+    assert(sliderTheme.thumbShape != null);
+    // If the slider [SliderThemeData.trackHeight] is less than or equal to 0,
+    // then it makes no difference whether the track is painted or not,
+    // therefore the painting can be a no-op.
+    if (sliderTheme.trackHeight == null || sliderTheme.trackHeight! <= 0) {
+      return;
+    }
+
+    LinearGradient gradient = const LinearGradient(
+      colors: [
+        Color.fromRGBO(252, 138, 25, 1),
+        Color.fromRGBO(253, 119, 19, 1),
+        Color.fromRGBO(254, 96, 12, 1),
+      ],
+    );
+
+    final Rect trackRect = getPreferredRect(
+      parentBox: parentBox,
+      offset: offset,
+      sliderTheme: sliderTheme,
+      isEnabled: isEnabled,
+      isDiscrete: isDiscrete,
+    );
+
+    final activeGradientRect = Rect.fromLTRB(
+      trackRect.left,
+      (textDirection == TextDirection.ltr)
+          ? trackRect.top - (additionalActiveTrackHeight / 2)
+          : trackRect.top,
+      thumbCenter.dx,
+      (textDirection == TextDirection.ltr)
+          ? trackRect.bottom + (additionalActiveTrackHeight / 2)
+          : trackRect.bottom,
+    );
+
+    // Assign the track segment paints, which are leading: active and
+    // trailing: inactive.
+    final ColorTween activeTrackColorTween = ColorTween(
+        begin: sliderTheme.disabledActiveTrackColor,
+        end: sliderTheme.activeTrackColor);
+    final ColorTween inactiveTrackColorTween = ColorTween(
+        begin: sliderTheme.disabledInactiveTrackColor,
+        end: sliderTheme.inactiveTrackColor);
+    final Paint activePaint = Paint()
+      ..shader = gradient.createShader(activeGradientRect)
+      ..color = activeTrackColorTween.evaluate(enableAnimation)!;
+    final Paint inactivePaint = Paint()
+      ..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
+    final Paint leftTrackPaint;
+    final Paint rightTrackPaint;
+    switch (textDirection) {
+      case TextDirection.ltr:
+        leftTrackPaint = activePaint;
+        rightTrackPaint = inactivePaint;
+      case TextDirection.rtl:
+        leftTrackPaint = inactivePaint;
+        rightTrackPaint = activePaint;
+    }
+
+    final Radius trackRadius = Radius.circular(trackRect.height / 2);
+    final Radius activeTrackRadius =
+        Radius.circular((trackRect.height + additionalActiveTrackHeight) / 2);
+
+    context.canvas.drawRRect(
+      RRect.fromLTRBAndCorners(
+        trackRect.left,
+        (textDirection == TextDirection.ltr)
+            ? trackRect.top - (additionalActiveTrackHeight / 2)
+            : trackRect.top,
+        thumbCenter.dx,
+        (textDirection == TextDirection.ltr)
+            ? trackRect.bottom + (additionalActiveTrackHeight / 2)
+            : trackRect.bottom,
+        topLeft: (textDirection == TextDirection.ltr)
+            ? activeTrackRadius
+            : trackRadius,
+        bottomLeft: (textDirection == TextDirection.ltr)
+            ? activeTrackRadius
+            : trackRadius,
+      ),
+      leftTrackPaint,
+    );
+    context.canvas.drawRRect(
+      RRect.fromLTRBAndCorners(
+        thumbCenter.dx,
+        (textDirection == TextDirection.rtl)
+            ? trackRect.top - (additionalActiveTrackHeight / 2)
+            : trackRect.top,
+        trackRect.right,
+        (textDirection == TextDirection.rtl)
+            ? trackRect.bottom + (additionalActiveTrackHeight / 2)
+            : trackRect.bottom,
+        topRight: (textDirection == TextDirection.rtl)
+            ? activeTrackRadius
+            : trackRadius,
+        bottomRight: (textDirection == TextDirection.rtl)
+            ? activeTrackRadius
+            : trackRadius,
+      ),
+      rightTrackPaint,
+    );
+
+    final bool showSecondaryTrack = (secondaryOffset != null) &&
+        ((textDirection == TextDirection.ltr)
+            ? (secondaryOffset.dx > thumbCenter.dx)
+            : (secondaryOffset.dx < thumbCenter.dx));
+
+    if (showSecondaryTrack) {
+      final ColorTween secondaryTrackColorTween = ColorTween(
+          begin: sliderTheme.disabledSecondaryActiveTrackColor,
+          end: sliderTheme.secondaryActiveTrackColor);
+      final Paint secondaryTrackPaint = Paint()
+        ..color = secondaryTrackColorTween.evaluate(enableAnimation)!;
+      if (textDirection == TextDirection.ltr) {
+        context.canvas.drawRRect(
+          RRect.fromLTRBAndCorners(
+            thumbCenter.dx,
+            trackRect.top,
+            secondaryOffset.dx,
+            trackRect.bottom,
+            topRight: trackRadius,
+            bottomRight: trackRadius,
+          ),
+          secondaryTrackPaint,
+        );
+      } else {
+        context.canvas.drawRRect(
+          RRect.fromLTRBAndCorners(
+            secondaryOffset.dx,
+            trackRect.top,
+            thumbCenter.dx,
+            trackRect.bottom,
+            topLeft: trackRadius,
+            bottomLeft: trackRadius,
+          ),
+          secondaryTrackPaint,
+        );
+      }
+    }
+  }
+}
