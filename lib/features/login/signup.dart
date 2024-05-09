@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_application/features/login/signin.dart';
+import 'package:fyp_application/features/auth/authrepository.dart';
 
 class Signup extends StatelessWidget {
   const Signup({super.key});
@@ -197,6 +198,8 @@ class Signup extends StatelessWidget {
                       ),
                       child: ElevatedButton(
                         onPressed: () {
+
+                          //AuthRepository.SignupWithEmail();
                           Navigator.restorablePushNamed(
                               context, SignIn.routeName);
                         },

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "340146502722",
+    "project_id": "infoverse-207c6",
+    "storage_bucket": "infoverse-207c6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340146502722:android:41e063252c079e339341db",
+        "android_client_info": {
+          "package_name": "com.example.fyp_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgqM5YJu94ujG8wLzFlWbdD-4mcEbZ4wA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

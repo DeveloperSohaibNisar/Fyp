@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fyp_application/features/recording_summary/recording_summary_tabs_view.dart';
 import 'package:fyp_application/state/app_state.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-class RecordingList extends StatelessWidget {
-  const RecordingList({super.key});
+class RecordingList extends ConsumerWidget {
+  const RecordingList({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
-    var recodingdata = appState.recodingdata;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AppState = ref.watch(appStateNotifier);
+    var recodingdata = AppState.recodingdata;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: ListView.separated(

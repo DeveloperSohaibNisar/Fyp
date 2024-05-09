@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fyp_application/state/app_state.dart';
 import 'package:fyp_application/core/constants/consts.dart';
 import 'package:provider/provider.dart';
@@ -51,35 +52,34 @@ class RecordingFilterContainer extends StatelessWidget {
   }
 }
 
-class SortToogle extends StatelessWidget {
-  const SortToogle({
-    super.key,
-  });
+class SortToogle extends ConsumerWidget {
+  const SortToogle({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AppState = ref.watch(appStateNotifier);
+
     return IconButton(
         onPressed: () {
-          appState.toogleRecordingsOrder();
+          AppState.toogleRecordingsOrder();
         },
         icon: const Icon(Icons.swap_vert));
   }
 }
 
-class SortMenu extends StatefulWidget {
-  const SortMenu({super.key});
+class SortMenu extends ConsumerStatefulWidget {
+  const SortMenu({Key? key}) : super(key: key);
 
   @override
-  State<SortMenu> createState() => _SortMenuState();
+  ConsumerState<SortMenu> createState() => _SortMenuState();
 }
 
-class _SortMenuState extends State<SortMenu> {
+class _SortMenuState extends ConsumerState<SortMenu> {
   RecordingSortMenuItems? selectedItem;
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
+    final AppState = ref.watch(appStateNotifier);
     return PopupMenuButton<RecordingSortMenuItems>(
       icon: const Icon(Icons.sort),
       initialValue: selectedItem,
@@ -87,7 +87,7 @@ class _SortMenuState extends State<SortMenu> {
         setState(() {
           selectedItem = item;
         });
-        appState.sortRecodings(selectedItem);
+        AppState.sortRecodings(selectedItem);
       },
       itemBuilder: (BuildContext context) =>
           <PopupMenuEntry<RecordingSortMenuItems>>[
