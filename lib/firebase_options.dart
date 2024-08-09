@@ -41,12 +41,13 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAejgrYBNqHl1q7nO8RmMsPOHkvG3V1zwA',
+    apiKey: "AIzaSyAejgrYBNqHl1q7nO8RmMsPOHkvG3V1zwA",
+    authDomain: 'infoverse-207c6.firebaseapp.com',
+    projectId: 'infoverse-207c6',
+    storageBucket: 'infoverse-207c6.appspot.com',
     appId: '1:340146502722:web:7c23eff5459832459341db',
     messagingSenderId: '340146502722',
-    projectId: 'infoverse-207c6',
-    authDomain: 'infoverse-207c6.firebaseapp.com',
-    storageBucket: 'infoverse-207c6.appspot.com',
+
   );
 
   static const FirebaseOptions android = FirebaseOptions(

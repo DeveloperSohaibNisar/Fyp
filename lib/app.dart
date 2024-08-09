@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fyp_application/core/constants/theme/dark.dart';
 import 'package:fyp_application/core/constants/theme/light.dart';
@@ -44,9 +42,9 @@ class MyApp extends ConsumerWidget {
                   case HomeView.routeName:
                     return const HomeView();
                   case Signup.routeName:
-                    return const Signup();
+                    return Signup();
                   case SignIn.routeName:
-                    return const SignIn();
+                    return SignIn();
                   case Welcome.routeName:
                   default:
                     return const Welcome();

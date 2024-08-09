@@ -1,13 +1,29 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fyp_application/features/auth/auth_service.dart';
+import 'package:fyp_application/features/auth/token_service.dart';
 import 'package:fyp_application/features/home/home_view.dart';
 import 'package:fyp_application/features/login/signup.dart';
 
-class SignIn extends StatelessWidget {
-  const SignIn({super.key});
+
+final signInProvider = Provider((ref) => SignIn());
+
+class SignIn extends ConsumerWidget {
+
+  final Dio _dio = Dio();
+
+  static const String apiUrl = 'http://localhost:3000/api/login/';
+
+
+  final passwordController = TextEditingController();
+  final emailController = TextEditingController();
   static const routeName = '/SignIn';
 
+  SignIn({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -83,6 +99,7 @@ class SignIn extends StatelessWidget {
                         ),
                       ),
                       child: TextField(
+                        controller: emailController,
                         decoration: InputDecoration(
                             hintStyle: const TextStyle(
                               color: Color(0xFF848488),
@@ -91,13 +108,13 @@ class SignIn extends StatelessWidget {
                               fontWeight: FontWeight.w400,
                               height: 0,
                             ),
-                            hintText: "Username",
+                            hintText: "Email",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(50),
                                 borderSide: BorderSide.none),
                             fillColor: Colors.white,
                             filled: true,
-                            prefixIcon: const Icon(Icons.person)),
+                            prefixIcon: const Icon(Icons.email)),
                       ),
                     ),
                     const SizedBox(height: 30),
@@ -118,6 +135,7 @@ class SignIn extends StatelessWidget {
                         ),
                       ),
                       child: TextField(
+                        controller: passwordController,
                         decoration: InputDecoration(
                             hintStyle: const TextStyle(
                               color: Color(0xFF848488),
@@ -163,9 +181,15 @@ class SignIn extends StatelessWidget {
                           ],
                         ),
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.restorablePushNamed(
-                                context, HomeView.routeName);
+                          onPressed: () async {
+                            //ref.read(authRepositoryProvider).Signin(usernameController.text, passwordController.text);
+                           //var res = postLogindata(passwordController.text, emailController.text);
+                            final response = await ref.read(authServiceProvider).postLogindata(passwordController.text, emailController.text);
+
+                            await ref.read(tokenServiceProvider).setToken(response.data.toString());
+                            String? t= await ref.read(tokenServiceProvider).getToken();
+                            print("test token: "+t!);
+                            Navigator.restorablePushNamed(context, HomeView.routeName);
                           },
                           style: ElevatedButton.styleFrom(
                               shape: const StadiumBorder(),
@@ -237,4 +261,27 @@ class SignIn extends StatelessWidget {
       ),
     );
   }
+
+  Future<dynamic> postLogindata(String password,String email) async {
+    try {
+      final response = await _dio.post(apiUrl,
+        data: {
+          'email': email,
+          'password':password,
+
+        },
+        //options: Options(contentType: Headers.formUrlEncodedContentType)
+
+      );
+      print(response.statusCode.toString());
+      print(response.data.toString());
+      return response;
+
+    } catch (e) {
+      print('Error adding item: $e');
+
+
+    }
+  }
+
 }

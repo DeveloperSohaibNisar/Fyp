@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fyp_application/features/pdf_summary/pdf_summary_tabs_view.dart';
 import 'package:fyp_application/state/app_state.dart';
-import 'package:provider/provider.dart';
+
 import 'package:intl/intl.dart';
 
-class PdfList extends StatelessWidget {
+class PdfList extends ConsumerWidget {
   const PdfList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
+  Widget build(BuildContext context,WidgetRef ref) {
+    var appState = ref.watch(appStateNotifier);
     var pdfData = appState.pdfData;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),

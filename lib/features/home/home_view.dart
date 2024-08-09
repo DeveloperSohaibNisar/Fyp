@@ -261,11 +261,7 @@ class MyClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path_0 = Path();
-    int i = (size.width) as int;
-    i=(i/100) as int;
-    for(int j = 0; j<i;j++){
 
-    }
     path_0.moveTo(0,0);
     path_0.cubicTo(size.width*0.1256000,size.height*0.0094000,size.width*0.1206250,size.height*0.3255333,size.width*0.2500000,size.height*0.3333333);
     path_0.cubicTo(size.width*0.3743250,size.height*0.3166000,size.width*0.3757000,size.height*0.0030667,size.width*0.5000000,0);

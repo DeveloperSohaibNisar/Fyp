@@ -1,9 +1,23 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fyp_application/features/login/signin.dart';
-import 'package:fyp_application/features/auth/authrepository.dart';
+import 'package:fyp_application/features/auth/token_service.dart';
+final signupProvider = Provider((ref) => Signup());
+
 
 class Signup extends StatelessWidget {
-  const Signup({super.key});
+
+  final Dio _dio = Dio();
+
+  static const String apiUrl = 'http://localhost:3000/api/signup/';
+
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+  final passwordconController = TextEditingController();
+  final emailController = TextEditingController();
+
+  Signup({super.key});
   static const routeName = '/Signup';
 
   @override
@@ -62,6 +76,7 @@ class Signup extends StatelessWidget {
                       ),
                     ),
                     child: TextField(
+                      controller: usernameController,
                       decoration: InputDecoration(
                           hintStyle: const TextStyle(
                             color: Color(0xFF848488),
@@ -95,6 +110,7 @@ class Signup extends StatelessWidget {
                       ),
                     ),
                     child: TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                           hintStyle: const TextStyle(
                             color: Color(0xFF848488),
@@ -128,6 +144,7 @@ class Signup extends StatelessWidget {
                       ),
                     ),
                     child: TextField(
+                      controller: passwordController,
                       decoration: InputDecoration(
                           hintStyle: const TextStyle(
                             color: Color(0xFF848488),
@@ -161,6 +178,7 @@ class Signup extends StatelessWidget {
                       ),
                     ),
                     child: TextField(
+                      controller: passwordconController,
                       decoration: InputDecoration(
                           hintStyle: const TextStyle(
                             color: Color(0xFF848488),
@@ -197,11 +215,22 @@ class Signup extends StatelessWidget {
                         ],
                       ),
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          // Wait for the response from postData function
+                          final res = await postData(
+                            usernameController.text,
+                            passwordController.text,
+                            passwordconController.text,
+                            emailController.text,
+                          );
 
-                          //AuthRepository.SignupWithEmail();
-                          Navigator.restorablePushNamed(
-                              context, SignIn.routeName);
+                          // Handle the response and store it locally
+                          if (res != null) {
+                            // Convert res.data to a string if necessary
+                            String resultString = res.data.toString();
+                            TokenService token = TokenService();
+                            token.setToken(resultString);
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           shape: const StadiumBorder(),
@@ -269,4 +298,28 @@ class Signup extends StatelessWidget {
       ),
     );
   }
+
+  Future<dynamic> postData(String name, String password, String passwordConfirm, String email) async {
+    try {
+      final response = await _dio.post('http://localhost:3000/api/signup/',
+          data: {
+        'email': email,
+            'password':password,
+            'confirmPassword': passwordConfirm,
+            'name': name,
+          },
+          //options: Options(contentType: Headers.formUrlEncodedContentType)
+
+      );
+      print(response.statusCode.toString());
+      print(response.data.toString());
+      return response;
+
+    } catch (e) {
+      print('Error adding item: $e');
+
+
+    }
+  }
+
 }
